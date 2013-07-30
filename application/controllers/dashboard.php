@@ -29,7 +29,7 @@ Class Dashboard extends CI_Controller {
 	{
 		$data['section'] = 'duplicate_creatives';
 		$this->load->view('header', $data);
-		
+		$this->load->view('subsections/duplicate_creatives');
 		$this->load->view('footer');
 	}
 	
@@ -37,7 +37,7 @@ Class Dashboard extends CI_Controller {
 	{
 		$data['section'] = 'associate_creatives';
 		$this->load->view('header', $data);
-		
+		$this->load->view('subsections/associate_creatives');
 		$this->load->view('footer');
 	}
 	
@@ -45,7 +45,7 @@ Class Dashboard extends CI_Controller {
 	{
 		$data['section'] = 'block_urls';
 		$this->load->view('header', $data);
-		
+		$this->load->view('subsections/block_urls');
 		$this->load->view('footer');
 	}
 	
@@ -61,7 +61,7 @@ Class Dashboard extends CI_Controller {
 	{
 		$data['section'] = 'upload_creatives';
 		$this->load->view('header', $data);
-		
+		$this->load->view('subsections/upload_creatives');
 		$this->load->view('footer');
 	}
 	
@@ -69,7 +69,7 @@ Class Dashboard extends CI_Controller {
 	{
 		$data['section'] = 'test_tags';
 		$this->load->view('header', $data);
-		
+		$this->load->view('subsections/test_tags');
 		$this->load->view('footer');
 	}
 	
@@ -77,7 +77,7 @@ Class Dashboard extends CI_Controller {
 	{
 		$data['section'] = 'exclude_publishers';
 		$this->load->view('header', $data);
-		
+		$this->load->view('subsections/exclude_publishers');
 		$this->load->view('footer');
 	}
 	
