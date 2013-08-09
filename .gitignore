@@ -9,3 +9,5 @@ application/logs/*
 !application/logs/.htaccess
 
 uploads/
+git-ftp.py
+.gitftpignore
