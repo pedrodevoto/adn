@@ -9,13 +9,24 @@
     <![endif]-->
 
 	<!-- jQuery  -->
-	<script type="text/javascript" src="<?php echo base_url();?>static/js/jquery-1.10.2.min.js"></script>
+	<!--<script type="text/javascript" src="<?php echo base_url();?>static/js/jquery-1.10.2.min.js"></script>-->
+	<script type="text/javascript" src="//code.jquery.com/jquery.js"></script>
 	
 	<!-- Bootstrap -->
 	<script type="text/javascript" src="<?php echo base_url();?>static/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="<?php echo base_url();?>static/css/bootstrap.css" type="text/css" />
 	
+	<!-- Validation -->
+	<script type="text/javascript" src="<?php echo base_url();?>static/js/jquery.validate.min.js"></script>
 	
+	<!-- Form plugin -->
+	<script type="text/javascript" src="<?php echo base_url();?>static/js/jquery.form.min.js"></script>
+	
+	<!-- Multiple select plugin -->
+	<script type="text/javascript" src="<?php echo base_url();?>static/js/bootstrap-select.min.js"></script>
+	<link rel="stylesheet" href="<?php echo base_url();?>static/css/bootstrap-select.css" type="text/css" />
+	
+
 </head>
 <body>
 	<div class="navbar">

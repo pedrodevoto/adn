@@ -7,6 +7,7 @@ Class Dashboard extends CI_Controller {
 		parent::__construct();
 		$this->load->helper('url');
 		$this->load->helper('form');
+		$this->load->database();
 	}
 	
 	public function index() 
@@ -60,6 +61,23 @@ Class Dashboard extends CI_Controller {
 	public function upload_creatives()
 	{
 		$data['section'] = 'upload_creatives';
+		
+		$data['offer_types'] = $this->db->order_by('description')->get_where('offer_types', 'parent_id is null')->result();
+		for ($i = 0; $i < count($data['offer_types']); $i++) {
+			$data['offer_types'][$i]->sub_offer_types = $this->db->get_where('offer_types', array('parent_id'=>$data['offer_types'][$i]->id))->result();
+		}
+		$data['creative_themes'] = $this->db->select('DISTINCT tertiary_category AS category', FALSE)->where(array('secondary_category'=>'Creative Themes', 'is_enabled'=>1))->get('creative_tags')->result();
+		for ($i = 0; $i < count($data['creative_themes']); $i++) {
+			$data['creative_themes'][$i]->sub_categories = $this->db->select('id, tag, description')->get_where('creative_tags', array('tertiary_category'=>$data['creative_themes'][$i]->category, 'is_enabled'=>1, 'secondary_category'=>'Creative Themes'))->result();
+		}
+		
+		$data['creative_specs'] = $this->db->select('DISTINCT tertiary_category AS category', FALSE)->where(array('secondary_category'=>'Creative Specs', 'is_enabled'=>1))->get('creative_tags')->result();
+		for ($i = 0; $i < count($data['creative_specs']); $i++) {
+			$data['creative_specs'][$i]->sub_categories = $this->db->select('id, tag, description')->get_where('creative_tags', array('tertiary_category'=>$data['creative_specs'][$i]->category, 'is_enabled'=>1, 'secondary_category'=>'Creative Specs'))->result();
+		}
+		
+		$data['languages'] = $this->db->get('languages')->result();
+
 		$this->load->view('header', $data);
 		$this->load->view('subsections/upload_creatives');
 		$this->load->view('footer');
