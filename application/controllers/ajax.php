@@ -2,6 +2,18 @@
 
 Class Ajax extends CI_Controller {
 	
+	public function __construct()
+	{
+		parent::__construct();
+		
+		$this->load->library('tank_auth'); // Authentication library
+		
+		if (!$this->tank_auth->is_logged_in()) {
+			//TODO implement not-logged-in-respones in ajax.php
+			exit;
+		}
+	}
+	
 	public function upload_creatives()
 	{
 		$t = microtime(true);

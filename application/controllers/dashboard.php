@@ -8,6 +8,12 @@ Class Dashboard extends CI_Controller {
 		$this->load->helper('url');
 		$this->load->helper('form');
 		$this->load->database();
+		
+		$this->load->library('tank_auth'); // Authentication library
+		
+		if (!$this->tank_auth->is_logged_in()) {
+			redirect('/auth/login/'); // Redirects if not logged in (SHOULD IMPLEMENT AJAX HANDLER)
+		}
 	}
 	
 	public function index() 
