@@ -5,7 +5,7 @@ class Rightmedia {
 	
 	const SOAP_BASE = 'https://api-test.yieldmanager.com/api-1.37/';
 	const KEY = "22]o<2IL20IqoE9k:0T32ZXDcmHn]6";
-	private $pass = '26OsLmZvOS';
+
 	// services
 	private $__contact_client = NULL;
 	private $__creative_client = NULL;
