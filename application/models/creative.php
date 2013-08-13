@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-Class Creative extends CI_Model {
+class Creative extends CI_Model {
 	
 	private $mediatypes = array(
 		'png'=>'Image',
