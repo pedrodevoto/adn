@@ -96,9 +96,7 @@
 </div>
 <script>
 $(document).ready(function() {
-	$("input,select,textarea").not("[type=submit]").jqBootstrapValidation({
-		preventSubmit: true
-	});
+	$('#creativesUploadForm').validate();
 	$('#creativesUploadForm').ajaxForm({
 		beforeSubmit: function(arr, $form, options) {
 			$('#upload').prop('disabled', true);

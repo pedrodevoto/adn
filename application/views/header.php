@@ -17,7 +17,7 @@
 	<link rel="stylesheet" href="<?php echo base_url();?>static/css/bootstrap.css" type="text/css" />
 	
 	<!-- Validation -->
-	<script type="text/javascript" src="<?php echo base_url();?>static/js/jqBootstrapValidation.js"></script>
+	<script type="text/javascript" src="<?php echo base_url();?>static/js/jquery.validate.min.js"></script>
 	
 	<!-- Form plugin -->
 	<script type="text/javascript" src="<?php echo base_url();?>static/js/jquery.form.min.js"></script>
