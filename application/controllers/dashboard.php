@@ -18,9 +18,9 @@ Class Dashboard extends CI_Controller {
 	
 	public function index() 
 	{
-		$data['section'] = 'publishers';
+		$data['section'] = 'upload_creatives';
 		$this->load->view('header', $data);
-		$this->load->view('subsections/publishers');
+		$this->load->view('subsections/upload_creatives');
 		$this->load->view('footer');
 	}
 	
