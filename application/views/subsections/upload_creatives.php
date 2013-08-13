@@ -95,9 +95,9 @@
       	
       	
 	  		<div class="span8 control-group offset1">
-				<label for="zip">Archivo zip:</label>
+				<label for="zip">Zip archive:</label>
 	        	<div class="controls span8">
-					<input id="zip" name="zip" type="file" class="" />
+					<input id="zip" name="zip" type="file" required />
 	        	</div>
 	      	</div>
 	        <div class="span12 form-actions">
@@ -114,11 +114,15 @@ $(document).ready(function() {
 	$('#creativesUploadForm').ajaxForm({
 		beforeSubmit: function(arr, $form, options) {
 			$('#upload').prop('disabled', true);
-			$('#response').html('loading...');
+			$('#response').removeClass('alert-success alert-error').addClass('alert').html('Loading...');
 		},
 		success: function(responseText, statusText, xhr, $form) {
 			$('#upload').prop('disabled', false);
-			$('#response').html(responseText);
+			$('#response').addClass('alert-success').html(responseText);
+		},
+		error: function() {
+			$('#upload').prop('disabled', false);
+			$('#response').addClass('alert-error').html('Error.');
 		}
 	});
 	$('.selectpicker').selectpicker();

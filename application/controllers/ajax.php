@@ -4,6 +4,7 @@ Class Ajax extends CI_Controller {
 	
 	public function upload_creatives()
 	{
+		$t = microtime(true);
 		$files = $this->_get_extracted_files();
 		if (count($files)==0) {
 			die('Error: No files found.');
@@ -12,6 +13,7 @@ Class Ajax extends CI_Controller {
 		$this->load->model('Creative');
 		$this->load->library('rightmedia');
 		
+		$creatives = array();
 		foreach($files as $file) {
 			$creative = new Creative();
 			
@@ -29,19 +31,11 @@ Class Ajax extends CI_Controller {
 			$creative->type = 'file';
 			$creative->setFile($file);
 			
-			if ($creative_id = $this->rightmedia->upload_creative($creative)) {
-				if(!$this->rightmedia->assign_creative($creative_id, $creative->line)) {
-					echo $this->rightmedia->last_error."<br />";
-				}
-				if (!$this->rightmedia->set_creative_tags($creative_id, $creative->specs, $creative->themes)) {
-					echo $this->rightmedia->last_error."<br />";
-				}
-				echo "Creative uploaded: ".$creative_id;
-			}
-			else {
-				echo $this->rightmedia->last_error;
-			}			
+			$creatives[] = $creative;
 		}
+		$this->rightmedia->upload_creatives($creatives, $this->input->post('line'));
+		echo $this->rightmedia->creatives_uploaded.' creatives uploaded ('.implode(', ', $this->rightmedia->ids).')<br />';
+		echo sprintf("Done in %f seconds", microtime(true)-$t);
 	}
 	
 	private function _get_extracted_files()

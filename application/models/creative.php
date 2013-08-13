@@ -31,6 +31,8 @@ Class Creative extends CI_Model {
 	var $creative_content;
 	var $file_markers;
 	
+	var $id;
+	
 	function __construct($advertiser = '', $line = '', $url = '', $offertype = '', $prefix = '', $clicktag = '', $suffix = '', $language = '', $specs = '', $themes = '')
 	{
 		parent::__construct();
@@ -98,7 +100,7 @@ Class Creative extends CI_Model {
 		$creative->can_track_clicks = true;
 		
 		$creative_content->media_type = $this->mediatype;
-		$creative_content->media_url = $this->file_markers[0];
+		$creative_content->media_url = $this->file_markers;
 		$creative->contents = array($creative_content);
 		
 		return $creative;

@@ -3,7 +3,7 @@
 
 class Rightmedia {
 	
-	const SOAP_BASE = 'https://api-test.yieldmanager.com/api-1.36/';
+	const SOAP_BASE = 'https://api-test.yieldmanager.com/api-1.37/';
 	const KEY = "22]o<2IL20IqoE9k:0T32ZXDcmHn]6";
 	private $pass = '26OsLmZvOS';
 	// services
@@ -17,6 +17,8 @@ class Rightmedia {
 	private $ci;
 	
 	var $last_error;
+	var $creatives_uploaded;
+	var $ids = array();
 	
 	public function __construct($params = array('login'=>TRUE))
 	{
@@ -77,15 +79,59 @@ class Rightmedia {
 		return $this->__dictionary_client;
 	}
 	
-	public function upload_creative($creative)
+	public function upload_creative(&$creative)
 	{
 		$supporting_file = $creative->getSupportingFile();
 		$file_markers = $this->creative_client()->addSupportingFiles($this->token, array($supporting_file));
-		$creative->file_markers = $file_markers;
+		$creative->file_markers = $file_markers[0];
 		
 		try {
 			 $creative_id = $this->creative_client()->add($this->token, $creative->toUpload());
 			 return $creative_id;
+		}
+		catch (Exception $e) {
+			$this->last_error = $e->getMessage();
+			return FALSE;
+		}
+	}
+	
+	public function upload_creatives(&$creatives, $line)
+	{
+		$supporting_files = array();
+		foreach ($creatives as $creative) {
+			$supporting_files[] = $creative->getSupportingFile();
+		}
+		$file_markers = $this->creative_client()->addSupportingFiles($this->token, $supporting_files);
+
+		$creatives_to_upload = array();
+		for ($i = 0; $i < count($file_markers); $i++) {
+			$creatives[$i]->file_markers = $file_markers[$i];
+			$creatives_to_upload[] = $creatives[$i]->toUpload();
+		}
+		
+		try {
+			$creatives_result = $this->creative_client()->addCreatives($this->token, $creatives_to_upload);
+			
+			$creatives_lineitem = array();
+			for ($i = 0; $i < count($creatives); $i++) {
+				if (!$creatives_result[$i])
+					continue;
+				$creatives[$i]->id = $creatives_result[$i]->item_id;
+				$this->ids[] = $creatives[$i]->id;
+				$this->creatives_uploaded++;
+				if (empty($creatives[$i]->line))
+					continue;
+				$creative_lineitem = new StdClass();
+				$creative_lineitem->creative_id = $creatives[$i]->id;
+				$creative_lineitem->line_item_id = $creatives[$i]->line;
+				$creatives_lineitem[] = $creative_lineitem;
+			}
+			$assign_result = $this->assign_creatives($creatives_lineitem);
+			for ($i = 0; $i < count($creatives); $i++) {
+				if (!empty($creatives[$i]->id))
+					$this->set_creative_tags($creatives[$i]->id, $creatives[$i]->specs, $creatives[$i]->themes);
+			}
+			
 		}
 		catch (Exception $e) {
 			$this->last_error = $e->getMessage();
@@ -105,6 +151,18 @@ class Rightmedia {
 		}
 	}
 	
+	private function assign_creatives($creatives_lineitem)
+	{
+		try {
+			$result = $this->lineitem_client()->addCreatives($this->token, $creatives_lineitem);
+			return $result;
+		}
+		catch (Exception $e) {
+			$this->last_error = $e->getMessage();
+			return FALSE;
+		}
+
+	}
 	public function set_creative_tags($creative, $specs, $themes)
 	{
 		$tags = array();
