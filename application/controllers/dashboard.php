@@ -18,10 +18,7 @@ Class Dashboard extends CI_Controller {
 	
 	public function index() 
 	{
-		$data['section'] = 'upload_creatives';
-		$this->load->view('header', $data);
-		$this->load->view('subsections/upload_creatives');
-		$this->load->view('footer');
+		$this->upload_creatives();
 	}
 	
 	public function segments()
