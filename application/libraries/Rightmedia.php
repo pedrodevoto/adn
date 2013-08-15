@@ -11,12 +11,14 @@ class Rightmedia {
 	private $__creative_client = NULL;
 	private $__dictionary_client = NULL;
 	private $__lineitem_client = NULL;
+	private $__target_profile_client = NULL;
 	
 	private $token;
 	
 	private $ci;
 	
 	var $last_error;
+	var $errors;
 	var $creatives_uploaded;
 	var $ids = array();
 	
@@ -77,6 +79,12 @@ class Rightmedia {
 	{
 		$this->__dictionary_client = $this->__dictionary_client?$this->__dictionary_client:new SoapClient($this::SOAP_BASE . 'dictionary.php?wsdl');
 		return $this->__dictionary_client;
+	}
+	
+	private function target_profile_client()
+	{
+		$this->__target_profile_client = $this->__target_profile_client?$this->__target_profile_client:new SoapClient($this::SOAP_BASE . 'target_profile.php?wsdl');
+		return $this->__target_profile_client;
 	}
 	
 	public function upload_creative(&$creative)
@@ -163,6 +171,7 @@ class Rightmedia {
 		}
 
 	}
+	
 	public function set_creative_tags($creative, $specs, $themes)
 	{
 		$tags = array();
@@ -188,6 +197,30 @@ class Rightmedia {
 			}
 		}
 		
+	}
+	
+	public function exclude_publishers($adv_lines, $entity_type, $entity_ids, $default)
+	{
+		foreach ($adv_lines as $adv_line) {
+			switch ($entity_type) {
+				case 'pub':
+					try {
+						$this->target_profile_client()->setTargetPublishers($this->token, 'line_item', $adv_line, $default, $entity_ids, true);
+					}
+					catch (Exception $e) {
+						$this->errors[] = $e->getMessage();
+					}
+					break;
+				case 'line':
+					try {
+						$this->target_profile_client()->setTargetSellerLineItems($this->token, 'line_item', $adv_line, $default, $entity_ids, true);
+					}
+					catch (Exception $e) {
+						$this->errors[] = $e->getMessage();
+					}
+					break;
+			}
+		}
 	}
 	
 	// background jobs

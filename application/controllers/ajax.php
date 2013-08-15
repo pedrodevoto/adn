@@ -86,4 +86,27 @@ Class Ajax extends CI_Controller {
 		return $extracted_files;
 	}
 	
+	public function exclude_publishers()
+	{
+		$adv_lines = $this->numbers_to_array($this->input->post('adv_lines'));
+		$entity_type = $this->input->post('entity_type');
+		$entity_ids = $this->numbers_to_array($this->input->post('entity_ids'));
+		$default = $this->input->post('exclude')?TRUE:FALSE;
+
+		$this->load->library('rightmedia');
+		$this->rightmedia->exclude_publishers($adv_lines, $entity_type, $entity_ids, $default);
+		echo implode('<br />', $this->rightmedia->errors)
+		echo "Done";
+	}
+	
+	private function numbers_to_array($input, $delimiter)
+	{
+		$output = array();
+		foreach (explode(',', $input) as $item) {
+			if (intval($item) > 0 ) {
+				$output[] = $item;
+			}
+		}
+		return $output;
+	}
 }
