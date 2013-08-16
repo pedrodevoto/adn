@@ -86,6 +86,34 @@ Class Ajax extends CI_Controller {
 		return $extracted_files;
 	}
 	
+	public function get_pixels($io)
+	{
+		if (!$io)
+			return;
+		$this->load->library('rightmedia');
+		$pixels = $this->rightmedia->get_pixels($io);
+		$output = array();
+		foreach ($pixels as $pixel) {
+			$output[] = array('id'=>$pixel->id, 'name'=>$pixel->name);
+		}
+		echo json_encode($output);
+	}
+	
+	public function create_test_tag()
+	{
+		$this->load->model('Test_tag');
+		$this->load->library('rightmedia');
+		
+		$test_tag = new Test_tag();
+		$test_tag->description = "[TestTag:".microtime(true)."]";
+		$test_tag->io = $this->input->post('io');
+		$test_tag->pixel = $this->input->post('pixel');
+		
+		$this->rightmedia->create_test_tag($test_tag);
+		// echo $this->rightmedia->last_error."<br />";
+		echo "Done";
+	}
+
 	public function exclude_publishers()
 	{
 		$adv_lines = $this->numbers_to_array($this->input->post('adv_lines'));
@@ -95,7 +123,7 @@ Class Ajax extends CI_Controller {
 
 		$this->load->library('rightmedia');
 		$this->rightmedia->exclude_publishers($adv_lines, $entity_type, $entity_ids, $default);
-		echo implode('<br />', $this->rightmedia->errors)
+		echo implode('<br />', $this->rightmedia->errors);
 		echo "Done";
 	}
 	

@@ -5,13 +5,21 @@ class Rightmedia {
 	
 	const SOAP_BASE = 'https://api-test.yieldmanager.com/api-1.37/';
 	const KEY = "22]o<2IL20IqoE9k:0T32ZXDcmHn]6";
+	
+	const PUB_TEST_ID = 711311;
+	const PUB_TEST_IO = 1620223;
+	const TEST_SECTION_CHANNEL = 15;
 
 	// services
 	private $__contact_client = NULL;
 	private $__creative_client = NULL;
 	private $__dictionary_client = NULL;
 	private $__lineitem_client = NULL;
+	private $__io_client = NULL;
+	private $__pixel_client = NULL;
 	private $__target_profile_client = NULL;
+	private $__site_client = NULL;
+	private $__section_client = NULL;
 	
 	private $token;
 	
@@ -85,6 +93,30 @@ class Rightmedia {
 	{
 		$this->__target_profile_client = $this->__target_profile_client?$this->__target_profile_client:new SoapClient($this::SOAP_BASE . 'target_profile.php?wsdl');
 		return $this->__target_profile_client;
+	}
+	
+	private function io_client()
+	{
+		$this->__io_client = $this->__io_client?$this->__io_client:new SoapClient($this::SOAP_BASE . 'insertion_order.php?wsdl');
+		return $this->__io_client;
+	}
+	
+	private function pixel_client()
+	{
+		$this->__pixel_client = $this->__pixel_client?$this->__pixel_client:new SoapClient($this::SOAP_BASE . 'pixel.php?wsdl');
+		return $this->__pixel_client;
+	}
+	
+	private function site_client()
+	{
+		$this->__site_client = $this->__site_client?$this->__site_client:new SoapClient($this::SOAP_BASE . 'site.php?wsdl');
+		return $this->__site_client;
+	}
+	
+	private function section_client()
+	{
+		$this->__section_client = $this->__section_client?$this->__section_client:new SoapClient($this::SOAP_BASE . 'section.php?wsdl');
+		return $this->__section_client;
 	}
 	
 	public function upload_creative(&$creative)
@@ -197,6 +229,127 @@ class Rightmedia {
 			}
 		}
 		
+	}
+	
+	public function get_pixels($io_id)
+	{
+		try {
+			$io = $this->io_client()->get($this->token, $io_id);
+			$pixels = $this->pixel_client()->getByEntity($this->token, $io->buyer_entity_id, 999999, 1);
+			return $pixels['pixel'];
+		}
+		catch (Exception $e) {
+			$this->last_error = $e->getMessage();
+			return FALSE;
+		}
+	}
+	
+	public function create_test_tag(&$test_tag)
+	{
+		$test_tag->adv_line = $this->add_test_line('adv', $test_tag->io, 'Advertiser Line Item '.$test_tag->description, $test_tag->pixel);
+		$test_tag->pub_line = $this->add_test_line('pub', $this::PUB_TEST_IO, 'Publisher Line Item '.$test_tag->description);
+		
+		$test_tag->site = $this->add_test_site($test_tag->description);
+		$test_tag->section = $this->add_test_section($test_tag->site, $test_tag->description);
+		$this->set_site_default_section($test_tag->site, $test_tag->section);
+		
+		$this->include_section($test_tag->adv_line, array($test_tag->section));
+		$this->include_section($test_tag->pub_line, array($test_tag->section));
+		
+		$this->include_advertisers($test_tag->pub_line, array($test_tag->adv_line));
+		
+	}
+	
+	private function add_test_line($type, $io, $description, $pixel = NULL)
+	{
+		$line_item = new StdClass();
+		$line_item->insertion_order_id = $io;
+		$line_item->description = $description;
+		if ($type=='adv') {
+			$line_item->pricing_type = 'CPA';
+			$line_item->amount = 0.01;
+			$line_item->conversion_id = $pixel;
+		}
+		$line_item->active = true;
+		try {
+			$result = $this->lineitem_client()->add($this->token, $line_item);
+			return $result;
+		}
+		catch (Exception $e) {
+			$this->last_error = $e->getMessage();
+			return FALSE;
+		}
+	}
+	
+	private function add_test_site($description)
+	{
+		$site = new StdClass();
+		$site->publisher_entity_id = $this::PUB_TEST_ID;
+		$site->description = 'Site '.$description;
+		
+		try {
+			$result = $this->site_client()->add($this->token, $site);
+			return $result;
+		}
+		catch (Exception $e) {
+			$this->last_error = $e.getMessage();
+			return FALSE;
+		}
+	}
+	
+	private function add_test_section($site, $description)
+	{
+		$section = new StdClass();
+		$section->site_id = $site;
+		$section->description = 'Section '.$description;
+		$section->channels = array($this::TEST_SECTION_CHANNEL);
+		
+		try {
+			$result = $this->section_client()->add($this->token, $section);
+			return $result;
+		}
+		catch (Exception $e) {
+			$this->last_error = $e.getMessage();
+			return FALSE;
+		}
+	}
+	
+	private function set_site_default_section($site_id, $section_id)
+	{
+		try {
+			$site = $this->site_client()->get($this->token, $site_id);
+			$site->default_section_id = $section_id;
+			$this->site_client()->update($this->token, $site);
+			return TRUE;
+		}
+		catch (Exception $e) {
+			$this->last_error = $e.getMessage();
+			return FALSE;
+		}
+	}
+	
+	private function include_section($line, $sections)
+	{
+		try {
+			$this->target_profile_client()->setTargetSections($this->token, 'line_item', $line, false, $sections, false);
+			return TRUE;
+		}
+		catch (Exception $e) {
+			$this->last_error = $e.getMessage();
+			return FALSE;
+		}
+	}
+	
+	private function include_advertisers($line, $advertisers)
+	{
+		try {
+			$this->target_profile_client()->setTargetBuyerLineItems($this->token, 'line_item', $line, false, $advertisers, false);
+			return TRUE;
+		}
+		catch (Exception $e) {
+			$this->last_error = $e.getMessage();
+			return FALSE;
+		}
 	}
 	
 	public function exclude_publishers($adv_lines, $entity_type, $entity_ids, $default)

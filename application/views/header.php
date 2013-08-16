@@ -47,7 +47,7 @@
 	            <li <?php if($section=='block_urls'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/block_urls')?>">URLs blocking</a></li>
 	            <li <?php if($section=='actions'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/actions')?>">Logs</a></li> -->
 	            <li <?php if($section=='upload_creatives'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/upload_creatives')?>">Creative Upload</a></li>
-	            <!-- <li <?php if($section=='test_tags'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/test_tags')?>">Test Tag</a></li>
+	            <li <?php if($section=='test_tags'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/test_tags')?>">Test Tag</a></li>
 	            <li <?php if($section=='exclude_publishers'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/exclude_publishers')?>">Exclude Publishers</a></li>
 	          </ul>
 	          <ul class="nav pull-right">
