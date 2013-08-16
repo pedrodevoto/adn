@@ -61,7 +61,7 @@ Class Dashboard extends CI_Controller {
 		$this->load->view('footer');
 	}
 	
-	public function upload_creatives()
+	public function upload_creatives($from_test_tag = FALSE)
 	{
 		$data['section'] = 'upload_creatives';
 		
@@ -80,6 +80,13 @@ Class Dashboard extends CI_Controller {
 		}
 		
 		$data['languages'] = $this->db->get('languages')->result();
+		
+		$data['advertiser'] = '';
+		$data['line'] = '';
+		if ($from_test_tag) {
+			$data['advertiser'] = $this->input->get('a');
+			$data['line'] = $this->input->get('l');
+		}
 
 		$this->load->view('header', $data);
 		$this->load->view('subsections/upload_creatives');

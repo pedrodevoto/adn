@@ -5,12 +5,12 @@
 	    <fieldset>
 			<div class="span8 control-group offset1">
 	        	<div class="controls">
-					<input id="advertiser" name="advertiser" type="number" min="0" placeholder="Advertiser *" required />
+					<input id="advertiser" name="advertiser" type="number" min="0" placeholder="Advertiser *" value="<?=$advertiser?>" required />
 	        	</div>
 	      	</div>
 	      	<div class="span4 control-group offset1">
 	        	<div class="controls">
-					<input id="line" name="line" type="number" min="0" placeholder="Line item" />
+					<input id="line" name="line" type="number" min="0" placeholder="Line item" value="<?=$line?>" />
 	        	</div>
 	      	</div>
 	  	  	<div class="span4 control-group offset1">

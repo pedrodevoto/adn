@@ -8,6 +8,7 @@ class Rightmedia {
 	
 	const PUB_TEST_ID = 711311;
 	const PUB_TEST_IO = 1620223;
+	const PUB_TEST_SITE = 1633268;
 	const TEST_SECTION_CHANNEL = 15;
 
 	// services
@@ -20,6 +21,7 @@ class Rightmedia {
 	private $__target_profile_client = NULL;
 	private $__site_client = NULL;
 	private $__section_client = NULL;
+	private $__entity_client = NULL;
 	
 	private $token;
 	
@@ -117,6 +119,12 @@ class Rightmedia {
 	{
 		$this->__section_client = $this->__section_client?$this->__section_client:new SoapClient($this::SOAP_BASE . 'section.php?wsdl');
 		return $this->__section_client;
+	}
+	
+	private function entity_client()
+	{
+		$this->__entity_client = $this->__entity_client?$this->__entity_client:new SoapClient($this::SOAP_BASE . 'entity.php?wsdl');
+		return $this->__entity_client;
 	}
 	
 	public function upload_creative(&$creative)
@@ -246,13 +254,19 @@ class Rightmedia {
 	
 	public function create_test_tag(&$test_tag)
 	{
-		$test_tag->adv_line = $this->add_test_line('adv', $test_tag->io, 'Advertiser Line Item '.$test_tag->description, $test_tag->pixel);
-		$test_tag->pub_line = $this->add_test_line('pub', $this::PUB_TEST_IO, 'Publisher Line Item '.$test_tag->description);
+		if (!$test_tag->adv_line) {	
+			$test_tag->adv_line = $this->add_test_line('adv', $test_tag->io, 'Test Line Item '.microtime(true), $test_tag->pixel);
+		}
+		$insertion_order = $this->get_io($test_tag->io);
+		$advertiser = $this->get_entity($insertion_order->buyer_entity_id);
+		$test_tag->adv_id = $advertiser->id;
+		$test_tag->adv_name = $advertiser->name;
 		
-		$test_tag->site = $this->add_test_site($test_tag->description);
-		$test_tag->section = $this->add_test_section($test_tag->site, $test_tag->description);
-		$this->set_site_default_section($test_tag->site, $test_tag->section);
+		$test_tag->pub_line = $this->add_test_line('pub', $this::PUB_TEST_IO, $test_tag->adv_name.' Test '.microtime(true));
 		
+		$test_tag->site = $this::PUB_TEST_SITE;
+		$test_tag->section = $this->add_test_section($test_tag->site, $test_tag->adv_name.' Test '.microtime(true));
+
 		$this->include_section($test_tag->adv_line, array($test_tag->section));
 		$this->include_section($test_tag->pub_line, array($test_tag->section));
 		
@@ -345,6 +359,30 @@ class Rightmedia {
 		try {
 			$this->target_profile_client()->setTargetBuyerLineItems($this->token, 'line_item', $line, false, $advertisers, false);
 			return TRUE;
+		}
+		catch (Exception $e) {
+			$this->last_error = $e.getMessage();
+			return FALSE;
+		}
+	}
+	
+	private function get_entity($id)
+	{
+		try {
+			$result = $this->entity_client()->get($this->token, $id);
+			return $result;
+		}
+		catch (Exception $e) {
+			$this->last_error = $e.getMessage();
+			return FALSE;
+		}
+	}
+	
+	private function get_io($id)
+	{
+		try {
+			$result = $this->io_client()->get($this->token, $id);
+			return $result;
 		}
 		catch (Exception $e) {
 			$this->last_error = $e.getMessage();

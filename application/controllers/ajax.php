@@ -7,7 +7,7 @@ Class Ajax extends CI_Controller {
 		parent::__construct();
 		
 		$this->load->library('tank_auth'); // Authentication library
-		
+		$this->load->helper('url');
 		if (!$this->tank_auth->is_logged_in()) {
 			//TODO implement not-logged-in-respones in ajax.php
 			exit;
@@ -105,13 +105,16 @@ Class Ajax extends CI_Controller {
 		$this->load->library('rightmedia');
 		
 		$test_tag = new Test_tag();
-		$test_tag->description = "[TestTag:".microtime(true)."]";
 		$test_tag->io = $this->input->post('io');
 		$test_tag->pixel = $this->input->post('pixel');
 		
 		$this->rightmedia->create_test_tag($test_tag);
-		// echo $this->rightmedia->last_error."<br />";
-		echo "Done";
+		if ($this->rightmedia->last_error) {
+			echo $this->rightmedia->last_error;
+		}
+		else {
+			echo "Done ".anchor("dashboard/upload_creatives/1/?a=".$test_tag->adv_id."&l=".$test_tag->adv_line, 'Upload creatives');
+		}
 	}
 
 	public function exclude_publishers()
