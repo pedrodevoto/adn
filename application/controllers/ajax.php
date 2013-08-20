@@ -109,12 +109,25 @@ Class Ajax extends CI_Controller {
 		$test_tag->pixel = $this->input->post('pixel');
 		
 		$this->rightmedia->create_test_tag($test_tag);
+		$output = array();
 		if ($this->rightmedia->last_error) {
-			echo $this->rightmedia->last_error;
+			$output['error'] = $this->rightmedia->last_error;
 		}
 		else {
-			echo "Done ".anchor("dashboard/upload_creatives/1/?a=".$test_tag->adv_id."&l=".$test_tag->adv_line, 'Upload creatives');
+			$output['link_to_creats'] = site_url("dashboard/upload_creatives/1/?a=".$test_tag->adv_id."&l=".$test_tag->adv_line);
+			$output['link_to_tag'] = site_url('ajax/get_test_tag/'.$test_tag->adv_name.'/'.$test_tag->section);
 		}
+		echo json_encode($output);
+	}
+
+	public function get_test_tag( $advertiser, $section, $size)
+	{
+		$data['section'] = $section;
+		$data['size'] = $size;
+		list($data['width'], $data['height']) = explode('x', $size);
+		$data['advertiser'] = $advertiser;
+		
+		$this->load->view('subsections/test_tag', $data);
 	}
 
 	public function exclude_publishers()

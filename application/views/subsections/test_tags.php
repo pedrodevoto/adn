@@ -16,6 +16,17 @@
 					</select>
 	        	</div>
 	      	</div>
+			<div class="span8 control-group offset1">
+				<select title="Test Tag Size" id="size" class="selectpicker show-tick" name="size">
+					<option value="120x240">120x240</option>
+					<option value="120x600">120x600</option>
+					<option value="160x600">160x600</option>
+					<option value="234x60">234x60</option>
+					<option value="300x250" selected>300x250</option>
+					<option value="468x60">468x60</option>
+					<option value="728x90">728x90</option>
+				</select>
+			</div>
 	        <div class="span10 form-actions">
 				<input type="submit" class="btn btn-primary" value="Crear Test Tag" id="save-button" disabled="true">
 	        </div>
@@ -61,9 +72,24 @@ $(document).ready(function() {
 			$(':submit').prop('disabled', true);
 			$('#response').removeClass('alert-success alert-error').addClass('alert').html('Loading...');
 		},
+		dataType: 'json',
 		success: function(responseText, statusText, xhr, $form) {
+			if (responseText.error) {
+				$('#response').addClass('alert-error').html(responseText.error);
+			}
+			else {
+				var text = 'Done<br />';
+				text += ' <button class="btn btn-mini" id="upload-creats">Upload creatives</button>';
+				var test_tag_url = responseText.link_to_tag+'/'+$('#size').val();
+				text += ' <a href="'+test_tag_url+'">Download Test Tag again</a>';
+				$('#response').addClass('alert-success').html(text);
+				$('#upload-creats').click(function() {
+					window.location.href = responseText.link_to_creats;
+					return false;
+				})
+				window.location.href = test_tag_url;
+			}
 			$(':submit').prop('disabled', false);
-			$('#response').addClass('alert-success').html(responseText);
 		},
 		error: function() {
 			$(':submit').prop('disabled', false);
