@@ -163,4 +163,15 @@ Class Ajax extends CI_Controller {
 		echo implode('<br />', $this->rightmedia->errors);
 		echo "Done";
 	}
+	
+	public function copy_targeting()
+	{
+		$from_line = $this->input->post('from_line');
+		$to_lines = $this->numbers_to_array($this->input->post('to_lines'), ',');
+		$this->load->library('rightmedia');
+		$this->rightmedia->copy_targeting($from_line, $to_lines);
+		echo implode('<br />', $this->rightmedia->errors);
+		echo "Done";
+	}
+
 }

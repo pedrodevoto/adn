@@ -117,4 +117,12 @@ Class Dashboard extends CI_Controller {
 		$this->load->view('footer');
 	}
 	
+	public function copy_targeting()
+	{
+		$data['section'] = 'copy_targeting';
+		$this->load->view('header', $data);
+		$this->load->view('subsections/copy_targeting');
+		$this->load->view('footer');
+	}
+	
 }

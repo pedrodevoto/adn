@@ -28,7 +28,7 @@ class Rightmedia {
 	private $ci;
 	
 	var $last_error;
-	var $errors;
+	var $errors = array();
 	var $creatives_uploaded;
 	var $ids = array();
 	
@@ -441,6 +441,19 @@ class Rightmedia {
 			}
 			catch (Exception $e) {
 				$this->errors[] = $e->getMessage();
+				continue;
+			}
+		}
+	}
+
+	public function copy_targeting($from_line, $to_lines)
+	{
+		foreach ($to_lines as $to_line) {
+			try {
+				$this->target_profile_client()->copyTargetProfile($this->token, 'line_item', $from_line, $to_line);
+			}
+			catch (Exception $e) {
+				$this->errors[] = $e.getMessage();
 				continue;
 			}
 		}
