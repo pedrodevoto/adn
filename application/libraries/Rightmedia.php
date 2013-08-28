@@ -390,13 +390,20 @@ class Rightmedia {
 		}
 	}
 	
-	public function exclude_publishers($adv_lines, $entity_type, $entity_ids, $default)
+	public function exclude_publishers($entity_type0, $lines, $entity_type, $entity_ids, $default)
 	{
-		foreach ($adv_lines as $adv_line) {
+		foreach ($lines as $line) {
 			switch ($entity_type) {
-				case 'pub':
+				case 'entity':
 					try {
-						$this->target_profile_client()->setTargetPublishers($this->token, 'line_item', $adv_line, $default, $entity_ids, true);
+						switch ($entity_type0) {
+							case 'adv':
+								$this->target_profile_client()->setTargetPublishers($this->token, 'line_item', $line, $default, $entity_ids, true);
+								break;
+							case 'pub':
+								$this->target_profile_client()->setTargetAdvertisers($this->token, 'line_item', $line, $default, $entity_ids, true);
+								break;
+						}
 					}
 					catch (Exception $e) {
 						$this->errors[] = $e->getMessage();
@@ -404,7 +411,14 @@ class Rightmedia {
 					break;
 				case 'line':
 					try {
-						$this->target_profile_client()->setTargetSellerLineItems($this->token, 'line_item', $adv_line, $default, $entity_ids, true);
+						switch ($entity_type0) {
+							case 'adv':
+								$this->target_profile_client()->setTargetSellerLineItems($this->token, 'line_item', $line, $default, $entity_ids, true);
+								break;
+							case 'pub':
+								$this->target_profile_client()->setTargetBuyerLineItems($this->token, 'line_item', $line, $default, $entity_ids, true);
+								break;
+						}
 					}
 					catch (Exception $e) {
 						$this->errors[] = $e->getMessage();
