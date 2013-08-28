@@ -33,4 +33,10 @@ class Cli extends CI_Controller {
 		$this->load->library('Rightmedia', array('login'=>FALSE));
 		$this->rightmedia->set_credentials($username, $password);
 	}
+	
+	public function download_contacts()
+	{
+		$this->load->library('rightmedia');
+		$this->rightmedia->download_contacts();
+	}
 }

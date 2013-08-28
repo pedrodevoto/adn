@@ -174,4 +174,15 @@ Class Ajax extends CI_Controller {
 		echo "Done";
 	}
 
+	public function assign_manager()
+	{
+		$entity_type = $this->input->post('entity_type');
+		$entity_ids = $this->numbers_to_array($this->input->post('entity_ids'), ',');
+		$contact = $this->input->post('contact');
+		$this->load->library('rightmedia');
+		$this->rightmedia->assign_manager($entity_type, $entity_ids, $contact);
+		echo implode('<br />', $this->rightmedia->errors);
+		echo "Done";
+	}
+
 }

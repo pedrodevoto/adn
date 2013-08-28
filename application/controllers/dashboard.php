@@ -21,6 +21,15 @@ Class Dashboard extends CI_Controller {
 		$this->upload_creatives();
 	}
 	
+	public function publishers()
+	{
+		$data['section'] = 'publishers';
+		$data['contacts'] = $this->db->order_by('name')->get('contacts')->result();
+		$this->load->view('header', $data);
+		$this->load->view('subsections/publishers');
+		$this->load->view('footer');
+	}
+	
 	public function segments()
 	{
 		$data['section'] = 'segments';

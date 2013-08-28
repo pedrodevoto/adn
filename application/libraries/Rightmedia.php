@@ -10,6 +10,7 @@ class Rightmedia {
 	const PUB_TEST_IO = 1620223;
 	const PUB_TEST_SITE = 1633268;
 	const TEST_SECTION_CHANNEL = 15;
+	const ENTITY_ID = 117472;
 
 	// services
 	private $__contact_client = NULL;
@@ -71,6 +72,12 @@ class Rightmedia {
 	       $output = rtrim($output);
 	   }
 	   return $output;
+	}
+	
+	private function contact_client()
+	{
+		$this->__contact_client = $this->__contact_client?$this->__contact_client:new SoapClient($this::SOAP_BASE . 'contact.php?wsdl');
+		return $this->__contact_client;
 	}
 	
 	private function creative_client()
@@ -306,7 +313,7 @@ class Rightmedia {
 			return $result;
 		}
 		catch (Exception $e) {
-			$this->last_error = $e.getMessage();
+			$this->last_error = $e->getMessage();
 			return FALSE;
 		}
 	}
@@ -323,7 +330,7 @@ class Rightmedia {
 			return $result;
 		}
 		catch (Exception $e) {
-			$this->last_error = $e.getMessage();
+			$this->last_error = $e->getMessage();
 			return FALSE;
 		}
 	}
@@ -337,7 +344,7 @@ class Rightmedia {
 			return TRUE;
 		}
 		catch (Exception $e) {
-			$this->last_error = $e.getMessage();
+			$this->last_error = $e->getMessage();
 			return FALSE;
 		}
 	}
@@ -349,7 +356,7 @@ class Rightmedia {
 			return TRUE;
 		}
 		catch (Exception $e) {
-			$this->last_error = $e.getMessage();
+			$this->last_error = $e->getMessage();
 			return FALSE;
 		}
 	}
@@ -361,7 +368,7 @@ class Rightmedia {
 			return TRUE;
 		}
 		catch (Exception $e) {
-			$this->last_error = $e.getMessage();
+			$this->last_error = $e->getMessage();
 			return FALSE;
 		}
 	}
@@ -373,7 +380,7 @@ class Rightmedia {
 			return $result;
 		}
 		catch (Exception $e) {
-			$this->last_error = $e.getMessage();
+			$this->last_error = $e->getMessage();
 			return FALSE;
 		}
 	}
@@ -385,7 +392,7 @@ class Rightmedia {
 			return $result;
 		}
 		catch (Exception $e) {
-			$this->last_error = $e.getMessage();
+			$this->last_error = $e->getMessage();
 			return FALSE;
 		}
 	}
@@ -453,8 +460,32 @@ class Rightmedia {
 				$this->target_profile_client()->copyTargetProfile($this->token, 'line_item', $from_line, $to_line);
 			}
 			catch (Exception $e) {
-				$this->errors[] = $e.getMessage();
+				$this->errors[] = $e->getMessage();
 				continue;
+			}
+		}
+	}
+
+	public function assign_manager($entity_type, $entity_ids, $contact)
+	{
+		try {
+			$method = $entity_type=='pub'?'getBySellers':'getByBuyers';
+			$insertion_orders = $this->io_client()->$method($this->token, $entity_ids);
+		}
+		catch (Exception $e) {
+			$this->last_error = $e->getMessage();
+			return FALSE;
+		}
+		foreach ($insertion_orders as $insertion_order) {
+			$prop = $entity_type=='pub'?'buyer_contact_id':'seller_contact_id';
+			if ($insertion_order->$prop != $contact) {
+				$insertion_order->$prop = $contact;
+				try {
+					$this->io_client()->update($this->token, $insertion_order);
+				}
+				catch (Exception $e) {
+					$this->errors[] = $e->getMessage();
+				}
 			}
 		}
 	}
@@ -495,6 +526,23 @@ class Rightmedia {
 		$this->ci->db->truncate('languages');
 		foreach ($languages as $language) {
 			$this->ci->db->insert('languages', $language);
+		}
+	}	
+	public function download_contacts()
+	{
+		try {
+			$contacts = $this->contact_client()->getByEntity($this->token, $this::ENTITY_ID, 1000, 1);
+		}
+		catch (Exception $e) {
+			$this->last_error = $e->getMessage();
+			return FALSE;
+		}
+		$this->ci->db->truncate('contacts');
+		foreach ($contacts['contacts'] as $contact) {
+			if (!$contact->id or !$contact->first_name or !$contact->last_name) {
+				continue;
+			}
+			$this->ci->db->insert('contacts', array('id'=>$contact->id, 'name'=>$contact->first_name . " " . $contact->last_name));
 		}
 	}
 	

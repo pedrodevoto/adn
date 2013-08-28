@@ -40,8 +40,8 @@
 	        <a class="brand" href="<?=site_url('dashboard/index')?>">AdNetwork.net</a>
 	        <div class="nav-collapse">
 	          <ul class="nav">
-	            <!-- <li <?php if($section=='publishers'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/index')?>">Publishers</a></li>
-	            <li <?php if($section=='segments'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/segments')?>">Segments</a></li>
+	            <li <?php if($section=='publishers'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/publishers')?>">Publishers</a></li>
+	            <!--<li <?php if($section=='segments'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/segments')?>">Segments</a></li>
 	            <li <?php if($section=='duplicate_creatives'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/duplicate_creatives')?>">Duplicador</a></li>
 	            <li <?php if($section=='associate_creatives'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/associate_creatives')?>">Creatives</a></li>
 	            <li <?php if($section=='block_urls'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/block_urls')?>">URLs blocking</a></li>
