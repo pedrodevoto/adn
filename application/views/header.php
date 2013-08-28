@@ -49,6 +49,7 @@
 	            <li <?php if($section=='upload_creatives'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/upload_creatives')?>">Creative Upload</a></li>
 	            <li <?php if($section=='test_tags'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/test_tags')?>">Test Tag</a></li>
 	            <li <?php if($section=='exclude_publishers'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/exclude_publishers')?>">Exclude Publishers</a></li>
+				<li <?php if($section=='arbitrage'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/arbitrage')?>">Arbitrage</a></li>
 	          </ul>
 	          <ul class="nav pull-right">
 	            <li class="divider-vertical"></li>

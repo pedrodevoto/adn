@@ -109,4 +109,12 @@ Class Dashboard extends CI_Controller {
 		$this->load->view('footer');
 	}
 	
+	public function arbitrage()
+	{
+		$data['section'] = 'arbitrage';
+		$this->load->view('header', $data);
+		$this->load->view('subsections/arbitrage');
+		$this->load->view('footer');
+	}
+	
 }

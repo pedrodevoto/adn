@@ -153,4 +153,13 @@ Class Ajax extends CI_Controller {
 		}
 		return $output;
 	}
+
+	public function arbitrage()
+	{
+		$adv_lines = $this->numbers_to_array($this->input->post('adv_lines'));
+		$this->load->library('rightmedia');
+		$this->rightmedia->arbitrage($adv_lines);
+		echo implode('<br />', $this->rightmedia->errors);
+		echo "Done";
+	}
 }

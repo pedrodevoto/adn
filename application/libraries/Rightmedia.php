@@ -3,7 +3,7 @@
 
 class Rightmedia {
 	
-	const SOAP_BASE = 'https://api.yieldmanager.com/api-1.37/';
+	const SOAP_BASE = 'https://api-test.yieldmanager.com/api-1.37/';
 	const KEY = "22]o<2IL20IqoE9k:0T32ZXDcmHn]6";
 	
 	const PUB_TEST_ID = 711311;
@@ -414,6 +414,24 @@ class Rightmedia {
 		}
 	}
 	
+	public function arbitrage($adv_lines)
+	{
+		foreach ($adv_lines as $adv_line) {
+			try {
+				$line = $this->lineitem_client()->get($this->token, $adv_line);
+				$new_line_id = $this->lineitem_client()->duplicate($this->token, $adv_line, $line->description . ' (Arbitrage)');
+				$new_line = $this->lineitem_client()->get($this->token, $new_line_id);
+				$new_line->allow_convert_cpx_to_dcpm = TRUE;
+				$new_line->active = TRUE;
+				$this->lineitem_client()->update($this->token, $new_line);
+			}
+			catch (Exception $e) {
+				$this->errors[] = $e->getMessage();
+				continue;
+			}
+		}
+	}
+
 	// background jobs
 	public function download_size_enum()
 	{
