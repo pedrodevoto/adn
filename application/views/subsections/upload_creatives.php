@@ -87,7 +87,7 @@
 	        	</div>
 	      	</div>
 	        <div class="span10 form-actions">
-				<input type="submit" class="btn btn-primary" value="Guardar" id="upload">
+				<input type="submit" class="btn btn-primary" value="Upload" id="upload">
 	        </div>
 			<div class="span10" id="response">
 			</div>

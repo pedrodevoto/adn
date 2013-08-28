@@ -28,7 +28,7 @@
 				</select>
 			</div>
 	        <div class="span10 form-actions">
-				<input type="submit" class="btn btn-primary" value="Crear Test Tag" id="save-button" disabled="true">
+				<input type="submit" class="btn btn-primary" value="Create Test Tag" id="save-button" disabled="true">
 	        </div>
 			<div class="span10" id="response">
 			</div>

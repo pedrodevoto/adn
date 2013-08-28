@@ -36,8 +36,8 @@
 	            </div>
 	          </div>
 		    <div class="span9 form-actions">
-				<input type="submit" class="btn btn-primary" name="exclude" value="Excluir">
-				<input type="submit" class="btn btn-info" name="include" value="Incluir" style="margin-left:20px;">
+				<input type="submit" class="btn btn-primary" name="exclude" value="Exclude">
+				<input type="submit" class="btn btn-info" name="include" value="Include" style="margin-left:20px;">
 		    </div>
 			<div class="span9" id="response">
 			</div>
