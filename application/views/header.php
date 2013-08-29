@@ -51,6 +51,7 @@
 	            <li <?php if($section=='exclude_publishers'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/exclude_publishers')?>">Exclude Pub/Adv</a></li>
 				<li <?php if($section=='arbitrage'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/arbitrage')?>">Arbitrage</a></li>
 				<li <?php if($section=='copy_targeting'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/copy_targeting')?>">Copy Targeting</a></li>
+				<li <?php if($section=='deactivate'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/deactivate')?>">Deactivate</a></li>
 	          </ul>
 	          <ul class="nav pull-right">
 	            <li class="divider-vertical"></li>

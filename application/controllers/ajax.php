@@ -184,5 +184,15 @@ Class Ajax extends CI_Controller {
 		echo implode('<br />', $this->rightmedia->errors);
 		echo "Done";
 	}
+	
+	public function deactivate()
+	{
+		$entity_type = $this->input->post('entity_type');
+		$entity_ids = $this->numbers_to_array($this->input->post('entity_ids'), ',');
+		$this->load->library('rightmedia');
+		$this->rightmedia->deactivate($entity_type, $entity_ids);
+		echo implode('<br />', $this->rightmedia->errors);
+		echo "Done";
+	}
 
 }

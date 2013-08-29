@@ -490,6 +490,32 @@ class Rightmedia {
 		}
 	}
 
+	public function deactivate($entity_type, $entity_ids)
+	{
+		foreach ($entity_ids as $entity_id) {
+			$line_ids = array($entity_id);
+			if ($entity_type=='io') {
+				try {
+					$line_ids = $this->lineitem_client()->listByInsertionOrder($this->token, $entity_id);
+				}
+				catch (Exception $e) {
+					$this->errors[] = $e->getMessage();
+					continue;
+				}
+			}
+			foreach ($line_ids as $line_id) {
+				try {
+					$line = $this->lineitem_client()->get($this->token, $line_id);
+					$line->active = FALSE;
+					$this->lineitem_client()->update($this->token, $line);
+				}
+				catch (Exception $e) {
+					$this->errors[] = $e->getMessage();
+				}
+			}
+		}
+	}
+
 	// background jobs
 	public function download_size_enum()
 	{

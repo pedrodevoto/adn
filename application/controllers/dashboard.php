@@ -134,4 +134,12 @@ Class Dashboard extends CI_Controller {
 		$this->load->view('footer');
 	}
 	
+	public function deactivate()
+	{
+		$data['section'] = 'deactivate';
+		$this->load->view('header', $data);
+		$this->load->view('subsections/deactivate');
+		$this->load->view('footer');
+	}
+	
 }
