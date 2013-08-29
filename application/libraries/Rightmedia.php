@@ -23,6 +23,7 @@ class Rightmedia {
 	private $__site_client = NULL;
 	private $__section_client = NULL;
 	private $__entity_client = NULL;
+	private $__campaign_client = NULL;
 	
 	private $token;
 	
@@ -132,6 +133,12 @@ class Rightmedia {
 	{
 		$this->__entity_client = $this->__entity_client?$this->__entity_client:new SoapClient($this::SOAP_BASE . 'entity.php?wsdl');
 		return $this->__entity_client;
+	}
+	
+	private function campaign_client()
+	{
+		$this->__campaign_client = $this->__campaign_client?$this->__campaign_client:new SoapClient($this::SOAP_BASE . 'campaign.php?wsdl');
+		return $this->__campaign_client;
 	}
 	
 	public function upload_creative(&$creative)
@@ -513,6 +520,80 @@ class Rightmedia {
 					$this->errors[] = $e->getMessage();
 				}
 			}
+		}
+	}
+
+	public function get_ios_line_items($adv)
+	{
+		ini_set('memory_limit', -1);
+		try {
+			$ios = $this->io_client()->getByBuyer($this->token, $adv);
+			$ios = $ios['insertion_orders'];
+		}
+		catch (Exception $e) {
+			$this->last_error = $e->getMessage();
+			return FALSE;
+		}
+		foreach ($ios as $io) {
+			try {
+				$line_items = $this->lineitem_client()->getByInsertionOrder($this->token, $io->id, 1000, 1);
+				$io->line_items = $line_items['line_items'];
+			}
+			catch (Exception $e) {
+				$this->last_error = $e->getMessage();
+				continue;
+			}
+			foreach ($io->line_items as $line) {
+				try {
+					$campaigns = $this->campaign_client()->getByLineItem($this->token, $line->id);
+					$line->campaigns = $campaigns['campaigns'];
+				}
+				catch (Exception $e) {
+					$this->last_error = $e->getMessage();
+					continue;
+				}
+			}
+		}
+		return $ios;
+	}
+	
+	public function update_line_items($line_items)
+	{
+		foreach ($line_items as $line_item) {
+			if ($line_item['url']) {
+				$this->update_line_item_url($line_item['id'], $line_item['url']);
+			}
+			if ($line_item['amount']) {
+				$this->update_line_item_amount($line_item['id'], $line_item['amount']);
+			}
+		}
+	}
+
+	private function update_line_item_url($line_item_id, $url)
+	{
+		try {
+			$campaign = $this->campaign_client()->getByLineItem($this->token, $line_item_id);
+			$campaign['campaigns'][0]->click_url_override = $url;
+			$this->campaign_client()->update($this->token, $campaign['campaigns'][0]);
+			return TRUE;
+		}
+		catch (Exception $e) {
+			$this->errors[] = $e->getMessage();
+			return FALSE;
+		}
+	}
+
+	private function update_line_item_amount($line_item_id, $amount)
+	{
+		try {
+			$line_item = $this->lineitem_client()->get($this->token, $line_item_id);
+			$line_item->amount = floatval($amount);
+			$this->lineitem_client()->update($this->token, $line_item);
+			return TRUE;
+		}
+		catch (Exception $e) {
+			$this->errors[] = $e->getMessage();
+			return FALSE;
 		}
 	}
 

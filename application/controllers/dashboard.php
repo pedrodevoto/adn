@@ -142,4 +142,12 @@ Class Dashboard extends CI_Controller {
 		$this->load->view('footer');
 	}
 	
+	public function edit_lines()
+	{
+		$data['section'] = 'edit_lines';
+		$this->load->view('header', $data);
+		$this->load->view('subsections/edit_lines');
+		$this->load->view('footer');
+	}
+	
 }

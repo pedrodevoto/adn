@@ -194,5 +194,27 @@ Class Ajax extends CI_Controller {
 		echo implode('<br />', $this->rightmedia->errors);
 		echo "Done";
 	}
+	
+	public function get_line_items()
+	{
+		$adv = $this->input->post('adv');
+		$this->load->library('rightmedia');
+		if (!$insertion_orders = $this->rightmedia->get_ios_line_items($adv)) {
+			echo 'err' . $this->rightmedia->last_error;
+			return;
+		}
+		$this->load->helper('form');
+		$data['insertion_orders'] = $insertion_orders;
+		$this->load->view('subsections/edit_lines_table', $data);
+	}
+	
+	public function update_line_items()
+	{
+		$line_items = $this->input->post('line_item');
+		$this->load->library('rightmedia');
+		$this->rightmedia->update_line_items($line_items);
+		echo implode('<br />', $this->rightmedia->errors);
+		echo "Done";
+	}
 
 }
