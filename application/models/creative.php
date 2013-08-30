@@ -99,6 +99,9 @@ class Creative extends CI_Model {
 		else {
 			$creative->click_url = $this->url;
 		}
+		if ($this->mediatype=='Flash') {
+			$creative->flash_clicktag = $this->clicktag;
+		}
 		$creative->can_track_clicks = true;
 		
 		$creative_content->media_type = $this->mediatype;
