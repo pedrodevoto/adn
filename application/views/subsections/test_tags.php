@@ -39,7 +39,7 @@
 $(document).ready(function() {
 	$('.selectpicker').selectpicker();
 	$("#searchPixels").click(function(e){
-		$(this).val("Cargando...");
+		$(this).val("Searching...");
 		$(this).addClass("disabled");
 		$("#pixel").prop('disabled',true).selectpicker('refresh');
 		var ioID = $("#io").val();
