@@ -268,18 +268,19 @@ class Rightmedia {
 	
 	public function create_test_tag(&$test_tag)
 	{
+		$timestamp = date('d/m/y');
 		if (!$test_tag->adv_line) {	
-			$test_tag->adv_line = $this->add_test_line('adv', $test_tag->io, 'Test Line Item '.microtime(true), $test_tag->pixel);
+			$test_tag->adv_line = $this->add_test_line('adv', $test_tag->io, 'Test Line Item '.$timestamp, $test_tag->pixel);
 		}
 		$insertion_order = $this->get_io($test_tag->io);
 		$advertiser = $this->get_entity($insertion_order->buyer_entity_id);
 		$test_tag->adv_id = $advertiser->id;
 		$test_tag->adv_name = $advertiser->name;
 		
-		$test_tag->pub_line = $this->add_test_line('pub', $this::PUB_TEST_IO, $test_tag->adv_name.' Test '.microtime(true));
+		$test_tag->pub_line = $this->add_test_line('pub', $this::PUB_TEST_IO, $test_tag->adv_name.' Test '.$timestamp);
 		
 		$test_tag->site = $this::PUB_TEST_SITE;
-		$test_tag->section = $this->add_test_section($test_tag->site, $test_tag->adv_name.' Test '.microtime(true));
+		$test_tag->section = $this->add_test_section($test_tag->site, $test_tag->adv_name.' Test '.$timestamp);
 
 		$this->include_section($test_tag->adv_line, array($test_tag->section));
 		$this->include_section($test_tag->pub_line, array($test_tag->section));

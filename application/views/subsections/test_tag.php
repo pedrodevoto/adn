@@ -1,12 +1,12 @@
 <?php
 header("Cache-Control: private");
 header("Content-Type: text/html");
-header("Content-Disposition: attachment; filename=Test_Tag_".$advertiser);
+header("Content-Disposition: attachment; filename=Test_Tag_".htmlspecialchars_decode($advertiser).'.html');
 ?>
 <html>
 <body>
 	<h2>Name:</h2> 
-	<span class="header">Test Tag <?=$advertiser?> <font color="#E60000">Do not modify</font></span>
+	<span class="header">Test Tag <?=htmlspecialchars_decode($advertiser)?> <font color="#E60000">Do not modify</font></span>
 	<br />
 	<div id="tag_preview_div_4746058_336"> 
 		<table width="<?=$width?>" border="0" height="<?=$height?>" style="background: white; font-size:12; font-family: Arial, Verdana; color: #585858; border:solid 1px #7F9DB9;">
