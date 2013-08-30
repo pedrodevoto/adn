@@ -294,10 +294,16 @@ class Rightmedia {
 		$line_item = new StdClass();
 		$line_item->insertion_order_id = $io;
 		$line_item->description = $description;
-		if ($type=='adv') {
-			$line_item->pricing_type = 'CPA';
-			$line_item->amount = 0.01;
-			$line_item->conversion_id = $pixel;
+		switch ($type) {
+			case 'adv':
+				$line_item->pricing_type = 'CPA';
+				$line_item->amount = 0.01;
+				$line_item->conversion_id = $pixel;
+				break;
+			case 'pub':
+				$line_item->pricing_type = 'Revenue Share';
+				$line_item->amount = 100;
+				break;
 		}
 		$line_item->active = true;
 		try {
