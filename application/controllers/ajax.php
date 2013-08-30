@@ -27,21 +27,24 @@ Class Ajax extends CI_Controller {
 		
 		$creatives = array();
 		foreach($files as $file) {
+			if ($file['size'] > (40 * 1024)) {
+				continue;
+			}
 			$creative = new Creative();
 			
 			$creative->advertiser = $this->input->post('advertiser');
 			$creative->line = $this->input->post('line');
-			$creative->url = $this->input->post('url');
+			$creative->url = trim($this->input->post('url'));
 			$creative->offertype = $this->input->post('offertype');
-			$creative->prefix = $this->input->post('prefix');
-			$creative->clicktag = $this->input->post('clicktag');
-			$creative->suffix = $this->input->post('suffix');
+			$creative->prefix = trim($this->input->post('prefix'));
+			$creative->clicktag = trim($this->input->post('clicktag'));
+			$creative->suffix = trim($this->input->post('suffix'));
 			$creative->language = $this->input->post('language');
 			$creative->specs = $this->input->post('specs');
 			$creative->themes = $this->input->post('themes');
 
 			$creative->type = 'file';
-			$creative->setFile($file);
+			$creative->setFile($file['server_path']);
 			
 			$creatives[] = $creative;
 		}
@@ -58,7 +61,7 @@ Class Ajax extends CI_Controller {
 		}
 		
 		$config['upload_path'] = $upload_path;
-		$config['allowed_types'] = 'zip|rar';
+		$config['allowed_types'] = 'zip|rar|jpg|jpeg|png|swf|gif';
 		
 		$this->load->library('upload', $config);
 		
@@ -67,6 +70,9 @@ Class Ajax extends CI_Controller {
 		}
 		$filedata = $this->upload->data();
 		
+		if ($filedata['is_image'] or $filedata['file_type']=='application/x-shockwave-flash') {
+			return array($filedata['full_path']);
+		}
 		$this->load->library('unzip');
 		$this->unzip->allow(array('jpg', 'jpeg', 'png', 'swf', 'gif'));
 		
@@ -81,7 +87,7 @@ Class Ajax extends CI_Controller {
 		
 		$this->load->helper('file');
 		
-		$extracted_files = get_filenames($upload_path.'extract', TRUE);
+		$extracted_files = get_dir_file_info($upload_path.'extract', FALSE);
 		
 		return $extracted_files;
 	}

@@ -630,7 +630,7 @@ class Rightmedia {
 	}
 	public function download_languages()
 	{
-		$languages = $this->dictionary_client()->getLanguages($this->token);
+		$languages = $this->dictionary_client()->getEnumValues($this->token, 'creative_tag_language');
 		$this->ci->db->truncate('languages');
 		foreach ($languages as $language) {
 			$this->ci->db->insert('languages', $language);
