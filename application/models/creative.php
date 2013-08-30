@@ -86,7 +86,7 @@ class Creative extends CI_Model {
 		
 		$creative->advertiser_entity_id = $this->advertiser;
 		$creative->creative_type = $this->type;
-		$description = ($this->prefix?$this->prefix.' - ':'').basename($this->filename).($this->suffix?' - '.$this->suffix:'').' ['.date('d-m-y').']';
+		$description = ($this->prefix?$this->prefix.' - ':'').basename($this->filename).($this->suffix?' - '.$this->suffix:'').' ('.date('d-m-y').')';
 		$creative->description = $description;
 		$creative->offer_type_id = $this->offertype;
 		$creative->language_id = $this->language;
