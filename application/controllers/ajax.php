@@ -203,9 +203,10 @@ Class Ajax extends CI_Controller {
 	
 	public function get_line_items()
 	{
-		$adv = $this->input->post('adv');
+		$entity_type = $this->input->post('entity_type');
+		$entity_id = $this->input->post('entity_id');
 		$this->load->library('rightmedia');
-		if (!$insertion_orders = $this->rightmedia->get_ios_line_items($adv)) {
+		if (!$insertion_orders = $this->rightmedia->get_ios_line_items($entity_type, $entity_id)) {
 			echo 'err' . $this->rightmedia->last_error;
 			return;
 		}

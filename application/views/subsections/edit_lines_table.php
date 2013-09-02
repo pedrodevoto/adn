@@ -110,6 +110,8 @@ $(document).ready(function() {
 		setTab($(this).val());
 	})
 	setTab('vertical');
-	$('.io_toggle').click();
+	if ($('.io_toggle').size()>1) {
+		$('.io_toggle').click();
+	}
 });
 </script>

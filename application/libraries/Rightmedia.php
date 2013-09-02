@@ -530,12 +530,14 @@ class Rightmedia {
 		}
 	}
 
-	public function get_ios_line_items($adv)
+	public function get_ios_line_items($entity_type, $entity_id)
 	{
 		ini_set('memory_limit', -1);
+		$method = $entity_type=='adv'?'getByBuyer':'get';
+		$ios = array();
 		try {
-			$ios = $this->io_client()->getByBuyer($this->token, $adv);
-			$ios = $ios['insertion_orders'];
+			$ios[] = $this->io_client()->$method($this->token, $entity_id);
+			$ios = is_array($ios[0])?$ios[0]['insertion_orders']:$ios;
 		}
 		catch (Exception $e) {
 			$this->last_error = $e->getMessage();
