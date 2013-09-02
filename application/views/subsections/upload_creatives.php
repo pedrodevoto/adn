@@ -72,7 +72,7 @@
 			</div>
       	
 	      	<div class="span4 control-group offset1">
-					<select class="selectpicker show-tick" title="Language" id="language" name="language">
+					<select class="selectpicker show-tick" title="Language" id="language" name="language" required>
 						<?php foreach($languages as $language):?>
 							<option value="<?=$language->id?>"><?=$language->name?></option>
 						<?php endforeach;?>
@@ -96,7 +96,7 @@
 </div>
 <script>
 $(document).ready(function() {
-	$('#creativesUploadForm').validate();
+	// $('#creativesUploadForm').validate();
 	$('#creativesUploadForm').ajaxForm({
 		beforeSubmit: function(arr, $form, options) {
 			$('#upload').prop('disabled', true);

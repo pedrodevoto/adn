@@ -17,11 +17,11 @@
 			  
 	          <div class="span8 control-group offset1">
 	            <div class="controls">
-				  <textarea class="span7" id="entity_ids" name="entity_ids" rows="15" required pattern="^\s*(\s*[0-9]+\s*,?)+\s*$" ></textarea>
+				  <textarea class="span7" id="entity_ids" name="entity_ids" rows="15" required pattern="^\s*(\s*[0-9]+\s*,?)+\s*$" required ></textarea>
 	            </div>
 	          </div>
   			<div class="span8 control-group offset1">
-  				<select title="Account Manager" id="contact" class="selectpicker show-tick" name="contact">
+  				<select title="Account Manager" id="contact" class="selectpicker show-tick" name="contact" required>
 					<?php foreach($contacts as $contact):?>
 						<option value="<?=$contact->id?>"><?=$contact->name?> (<?=$contact->id?>)</option>
 					<?php endforeach;?>
