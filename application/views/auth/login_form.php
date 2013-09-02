@@ -98,8 +98,8 @@ $captcha = array(
 	
 	<?php echo form_open($this->uri->uri_string(), array('class'=>'form-signin')); ?>
 	<h2 class="form-signin-heading">Please sign in</h2>
-	<input name="login" type="text" class="input-block-level" maxlength="80" placeholder="Username / email address" />
-	<input name="password" type="password" class="input-block-level" placeholder="Password" />
+	<input name="login" type="text" class="input-block-level" maxlength="80" placeholder="Username / email address" required />
+	<input name="password" type="password" class="input-block-level" placeholder="Password" required />
 	<!--<?php echo form_input($login); ?>-->
 	<!--<?php echo form_password($password); ?>-->
     <label class="checkbox">

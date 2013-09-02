@@ -90,6 +90,7 @@ $captcha = array(
 	  margin-bottom: 10px;
 	}
 	.form-signin input[type="text"],
+	.form-signin input[type="email"],
 	.form-signin input[type="password"] {
 	  font-size: 16px;
 	  height: auto;
@@ -97,23 +98,29 @@ $captcha = array(
 	  padding: 7px 9px;
 	}
 	</style>
+	<script>
+	function checkPassword(input) {
+	    if ($(input).val() != $('#password').val()) {
+	        input.setCustomValidity('The two passwords must match.');
+	    } else {
+	        // input is valid -- reset the error message
+	        input.setCustomValidity('');
+	   }
+	}
+	</script>
 </head>
 <body>
 <?php echo form_open($this->uri->uri_string(), array('class'=>'form-signin')); ?>
 <h2 class="form-signin-heading">Please register</h2>
 	<?php if ($use_username) { ?>
-		<input type="text" name="username" value="" id="username" maxlength="20" size="30" placeholder="Username"  />
-		<?php echo form_error($username['name']); ?><?php echo isset($errors[$username['name']])?$errors[$username['name']]:''; ?>
+		<input type="text" name="username" value="" id="username" maxlength="20" size="30" placeholder="Username" required />
 	
 	<?php } ?>
-		<input type="text" name="email" value="" id="email" maxlength="80" size="30" placeholder="Email"  />
-		<?php echo form_error($email['name']); ?><?php echo isset($errors[$email['name']])?$errors[$email['name']]:''; ?>
+		<input type="email" name="email" value="" id="email" maxlength="80" size="30" placeholder="Email" required />
 		
-		<input type="password" name="password" value="" id="password" maxlength="20" size="30" placeholder="Password"  />
-		<?php echo form_error($password['name']); ?>
+		<input type="password" name="password" value="" id="password" maxlength="20" size="30" placeholder="Password" required />
 
-		<input type="password" name="confirm_password" value="" id="confirm_password" maxlength="20" size="30" placeholder="Confirm password"  />		
-		<?php echo form_error($confirm_password['name']); ?>
+		<input type="password" name="confirm_password" value="" id="confirm_password" maxlength="20" size="30" placeholder="Confirm password" required oninput="checkPassword(this)" />		
 
 	<?php if ($captcha_registration) {
 		if ($use_recaptcha) { ?>
