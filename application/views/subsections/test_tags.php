@@ -1,23 +1,28 @@
-<div class="span10 offset1">
-	<?=form_open('ajax/create_test_tag', array('id'=>'createTestTagForm'))?>
-	    <legend>Create Test Tag</legend>
-
-	    <fieldset>
-			<div class="span8 control-group offset1">
-	        	<div class="controls">
-					<input id="io" name="io" type="number" min="0" placeholder="Insertion Order" />
-					<input type="button" value="Search" class="btn " id="searchPixels" />
-	        	</div>
-	      	</div>
-	      	<div class="span8 control-group offset1">
-	        	<div class="controls">
-					<select title="Search Insertion Order" id="pixel" class="selectpicker show-tick" name="pixel">
-						<option></option>
-					</select>
-	        	</div>
-	      	</div>
-			<div class="span8 control-group offset1">
-				<select title="Test Tag Size" id="size" class="selectpicker show-tick" name="size">
+<div class="col-md-6 col-md-offset-1">
+	<?=form_open('ajax/create_test_tag', array('id'=>'createTestTagForm', 'role'=>'form'))?>
+		<legend>Create Test Tag</legend>
+		<fieldset>
+			<div class="row">
+				<div class="col-lg-5">
+					<div class="form-group">
+						<input id="io" class="form-control" name="io" type="number" min="0" placeholder="Insertion Order" />
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="form-group">
+						<input type="button" value="Search" class="btn btn-default" id="searchPixels" />
+					</div>
+				</div>
+			</div>
+		
+			<div class="form-group">
+				<select title="Search Insertion Order" id="pixel" class="selectpicker" name="pixel">
+					<option></option>
+				</select>
+			</div>
+		
+			<div class="form-group">
+				<select title="Test Tag Size" id="size" class="selectpicker" name="size">
 					<option value="120x240">120x240</option>
 					<option value="120x600">120x600</option>
 					<option value="160x600">160x600</option>
@@ -27,17 +32,18 @@
 					<option value="728x90">728x90</option>
 				</select>
 			</div>
-	        <div class="span10 form-actions">
-				<input type="submit" class="btn btn-primary" value="Create Test Tag" id="save-button" disabled="true">
-	        </div>
-			<div class="span10" id="response">
-			</div>
-	    </fieldset>
+			<button type="submit" id="save-button" class="btn btn-default" disabled>Create Test Tag</button>
+		</fieldset>
 	</form>
+    <br />
+    <br />
+    <div id="response"></div>
+
 </div>
 <script>
 $(document).ready(function() {
 	$('.selectpicker').selectpicker();
+	$("#pixel").prop('disabled',true).selectpicker('refresh');
 	$("#searchPixels").click(function(e){
 		$(this).val("Searching...");
 		$(this).addClass("disabled");
@@ -69,31 +75,31 @@ $(document).ready(function() {
 	});
 	$('#createTestTagForm').ajaxForm({
 		beforeSubmit: function(arr, $form, options) {
-			$(':submit').prop('disabled', true);
-			$('#response').removeClass('alert-success alert-error').addClass('alert').html('Loading...');
+			$('fieldset').prop('disabled', true);
+			$('#response').removeClass().addClass('alert alert-warning').html('Loading...');
 		},
 		dataType: 'json',
 		success: function(responseText, statusText, xhr, $form) {
 			if (responseText.error) {
-				$('#response').addClass('alert-error').html(responseText.error);
+				$('#response').removeClass().addClass('alert alert-danger').html(responseText.error);
 			}
 			else {
 				var text = 'Done<br />';
-				text += ' <button class="btn btn-mini" id="upload-creats">Upload creatives</button>';
+				text += ' <button class="btn btn-default btn-xs" id="upload-creats">Upload creatives</button>';
 				var test_tag_url = responseText.link_to_tag+'/'+$('#size').val();
 				text += ' <a href="'+test_tag_url+'">Download Test Tag again</a>';
-				$('#response').addClass('alert-success').html(text);
+				$('#response').removeClass().addClass('alert alert-success').html(text);
 				$('#upload-creats').click(function() {
 					window.location.href = responseText.link_to_creats;
 					return false;
 				})
 				window.location.href = test_tag_url;
 			}
-			$(':submit').prop('disabled', false);
+			$('fieldset').prop('disabled', false);
 		},
 		error: function() {
-			$(':submit').prop('disabled', false);
-			$('#response').addClass('alert-error').html('Error.');
+			$('fieldset').prop('disabled', false);
+			$('#response').removeClass().addClass('alert alert-danger').html('Error.');
 		}
 	});
 });

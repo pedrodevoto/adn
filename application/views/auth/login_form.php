@@ -65,50 +65,61 @@ $captcha = array(
 	body {
 	  padding-top: 40px;
 	  padding-bottom: 40px;
-	  background-color: #f5f5f5;
+	  background-color: #eee;
 	}
 
 	.form-signin {
-	  max-width: 300px;
-	  padding: 19px 29px 29px;
-	  margin: 0 auto 20px;
-	  background-color: #fff;
-	  border: 1px solid #e5e5e5;
-	  -webkit-border-radius: 5px;
-	     -moz-border-radius: 5px;
-	          border-radius: 5px;
-	  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-	     -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-	          box-shadow: 0 1px 2px rgba(0,0,0,.05);
+	  max-width: 330px;
+	  padding: 15px;
+	  margin: 0 auto;
 	}
 	.form-signin .form-signin-heading,
 	.form-signin .checkbox {
 	  margin-bottom: 10px;
 	}
-	.form-signin input[type="text"],
-	.form-signin input[type="password"] {
+	.form-signin .checkbox {
+	  font-weight: normal;
+	}
+	.form-signin .form-control {
+	  position: relative;
 	  font-size: 16px;
 	  height: auto;
-	  margin-bottom: 15px;
-	  padding: 7px 9px;
+	  padding: 10px;
+	  -webkit-box-sizing: border-box;
+	     -moz-box-sizing: border-box;
+	          box-sizing: border-box;
+	}
+	.form-signin .form-control:focus {
+	  z-index: 2;
+	}
+	.form-signin input[type="text"] {
+	  margin-bottom: -1px;
+	  border-bottom-left-radius: 0;
+	  border-bottom-right-radius: 0;
+	}
+	.form-signin input[type="password"] {
+	  margin-bottom: 10px;
+	  border-top-left-radius: 0;
+	  border-top-right-radius: 0;
 	}
 	</style>
 </head>
 <body>
-	
-	<?php echo form_open($this->uri->uri_string(), array('class'=>'form-signin')); ?>
-	<h2 class="form-signin-heading">Please sign in</h2>
-	<input name="login" type="text" class="input-block-level" maxlength="80" placeholder="Username / email address" required />
-	<input name="password" type="password" class="input-block-level" placeholder="Password" required />
-	<!--<?php echo form_input($login); ?>-->
-	<!--<?php echo form_password($password); ?>-->
-    <label class="checkbox">
-		<input name="remember" type="checkbox" value="1"> Remember me
-	</label>
-	<button class="btn btn-large btn-primary" type="submit">Sign in</button>
-	<?php echo anchor('/auth/forgot_password/', 'Forgot password'); ?>
-	<?php if ($this->config->item('allow_registration', 'tank_auth')) echo ' | '.anchor('/auth/register/', 'Register'); ?>
-	<?php echo form_close(); ?>
+    <div class="container">
+
+		<?php echo form_open($this->uri->uri_string(), array('class'=>'form-signin')); ?>
+        <h2 class="form-signin-heading">Please sign in</h2>
+		<input name="login" type="text" class="form-control" placeholder="User / email address" required autofocus />
+		<input name="password" type="password" class="form-control" placeholder="Password" required />
+        <label class="checkbox">
+          <input name="remember" type="checkbox" value="remember-me"> Remember me
+        </label>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+		<?php echo anchor('/auth/forgot_password/', 'Forgot password'); ?>
+		<?php if ($this->config->item('allow_registration', 'tank_auth')) echo ' | '.anchor('/auth/register/', 'Register'); ?>
+		<?php echo form_close(); ?>
+		
+    </div> <!-- /container -->
 
 </body>
 </html>

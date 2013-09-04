@@ -139,9 +139,9 @@ Class Ajax extends CI_Controller {
 	public function exclude_publishers()
 	{
 		$entity_type0 = $this->input->post('entity_type0');
-		$lines = $this->numbers_to_array($this->input->post('lines'));
+		$lines = $this->numbers_to_array($this->input->post('lines'), ',');
 		$entity_type = $this->input->post('entity_type');
-		$entity_ids = $this->numbers_to_array($this->input->post('entity_ids'));
+		$entity_ids = $this->numbers_to_array($this->input->post('entity_ids'), ',');
 		$default = $this->input->post('exclude')?TRUE:FALSE;
 
 		$this->load->library('rightmedia');
@@ -163,7 +163,7 @@ Class Ajax extends CI_Controller {
 
 	public function arbitrage()
 	{
-		$adv_lines = $this->numbers_to_array($this->input->post('adv_lines'));
+		$adv_lines = $this->numbers_to_array($this->input->post('adv_lines'), ',');
 		$this->load->library('rightmedia');
 		$this->rightmedia->arbitrage($adv_lines);
 		echo implode('<br />', $this->rightmedia->errors);

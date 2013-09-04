@@ -3,7 +3,7 @@
 
 class Rightmedia {
 	
-	const SOAP_BASE = 'https://api.yieldmanager.com/api-1.37/';
+	const SOAP_BASE = 'https://api-test.yieldmanager.com/api-1.37/';
 	const KEY = "22]o<2IL20IqoE9k:0T32ZXDcmHn]6";
 	
 	const PUB_TEST_ID = 711311;
@@ -269,13 +269,14 @@ class Rightmedia {
 	public function create_test_tag(&$test_tag)
 	{
 		$timestamp = date('d/m/y');
-		if (!$test_tag->adv_line) {	
-			$test_tag->adv_line = $this->add_test_line('adv', $test_tag->io, 'Test Line Item '.$timestamp, $test_tag->pixel);
-		}
 		$insertion_order = $this->get_io($test_tag->io);
 		$advertiser = $this->get_entity($insertion_order->buyer_entity_id);
 		$test_tag->adv_id = $advertiser->id;
 		$test_tag->adv_name = $advertiser->name;
+		
+		if (!$test_tag->adv_line) {	
+			$test_tag->adv_line = $this->add_test_line('adv', $test_tag->io,  $test_tag->adv_name.' Test '.$timestamp, $test_tag->pixel);
+		}
 		
 		$test_tag->pub_line = $this->add_test_line('pub', $this::PUB_TEST_IO, $test_tag->adv_name.' Test '.$timestamp);
 		

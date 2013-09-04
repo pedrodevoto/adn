@@ -1,79 +1,73 @@
-<div class="span10 offset1">
-	<?=form_open('ajax/exclude_publishers', array('id'=>'excludePubForm'))?>
-	    <legend>Excluir Publishers</legend>
-
-	    <!-- <div class="alert alert-error" style="margin: 20px">Verifica los datos ingresados</div> -->
-
-	    <fieldset>
-		  <div class="span8 control-group offset1">
-			  <div class="controls">
-				  <div class="btn-group" data-toggle-name="entity_type0" data-toggle="buttons-radio" >
-				    <button type="button" value="adv" class="btn entity_type0" data-toggle="button" id="advBtn0">Advertisers</button>
-				    <button type="button" value="pub" class="btn entity_type0" data-toggle="button" id="pubBtn0">Publishers</button>
-					<input type="hidden" name="entity_type0" id="entity_type0" value="adv" />
-				  </div>
-			  </div>
-		  </div>
-			 <div class="span8 control-group offset1">
-	            <div class="controls">
-	              <input class="span7" name="lines" id="lines" placeholder="Advertiser line items (comma separated)" required pattern="^\s*(\s*[0-9]+\s*,?)+\s*$" >
-	            </div>
-	          </div>
-			  <div class="span8 control-group offset1">
-				  <div class="controls">
-					  <div class="btn-group" data-toggle-name="entity_type" data-toggle="buttons-radio" >
-					    <button type="button" value="entity" class="btn entity_type" data-toggle="button" id="entityBtn">Publishers</button>
-					    <button type="button" value="line" class="btn entity_type" data-toggle="button" id="lineBtn">Line items</button>
-						<input type="hidden" name="entity_type" id="entity_type" value="pub" />
-					  </div>
-				  </div>
-			  </div>
-			  
-	          <div class="span8 control-group offset1">
-	            <div class="controls">
-				  <textarea class="span7" id="entity_ids" name="entity_ids" rows="15" required pattern="^\s*(\s*[0-9]+\s*,?)+\s*$" ></textarea>
-	              <!-- <span class="help-inline">Error</span> -->
-	            </div>
-	          </div>
-		    <div class="span9 form-actions">
-				<input type="submit" class="btn btn-primary" name="exclude" value="Exclude">
-				<input type="submit" class="btn btn-info" name="include" value="Include" style="margin-left:20px;">
-		    </div>
-			<div class="span9" id="response">
+<div class="col-md-6 col-md-offset-1">
+	<?=form_open('ajax/exclude_publishers', array('id'=>'excludePubForm', 'role'=>'form'))?>
+		<legend>Exclude Publishers / Advertisers</legend>
+		<fieldset>
+			<div class="form-group">
+				<div class="btn-group" data-toggle="buttons">
+					<label class="btn btn-default entity_type0">
+						<input type="radio" name="entity_type0" id="advBtn" value="adv" /> <span>Advertisers</span>
+					</label>
+					<label class="btn btn-default entity_type0">
+						<input type="radio" name="entity_type0" id="pubBtn" value="pub" /> <span>Publishers</span>
+					</label>
+				</div>  
 			</div>
-	    </fieldset>
+		
+			<div class="form-group">
+				<input type="text" class="form-control" name="lines" id="lines" placeholder="Advertiser line items (comma separated)" required pattern="^\s*(\s*[0-9]+\s*,?)+\s*$" >
+			</div>
+		
+			<div class="form-group">
+				<div class="btn-group" data-toggle="buttons">
+					<label class="btn btn-default entity_type">
+						<input type="radio" name="entity_type" id="entityBtn" value="entity" /> <span>Publishers</span>
+					</label>
+					<label class="btn btn-default entity_type">
+						<input type="radio" name="entity_type" id="lineBtn" value="line" /> <span>Line items</span>
+					</label>
+				</div>  
+			</div>
+
+			<div class="form-group">
+			    <textarea class="form-control" id="entity_ids" name="entity_ids" rows="15" required pattern="^\s*(\s*[0-9]+\s*,?)+\s*$" required ></textarea>
+			</div>
+
+			<input type="submit" class="btn btn-default" name="exclude" value="Exclude">
+			<input type="submit" class="btn btn-default" name="include" value="Include" style="margin-left:20px;">
+		</fieldset>
 	</form>
+	<br />
+	<br />
+	<div id="response"></div>
 </div>
 <script>
 $(document).ready(function() {
 	$('.entity_type0').click(function() {
-		$('#lines').prop('placeholder', $(this).text() + ' (comma separated)');
-		$('#entity_type0').val($(this).val());
-		if ($(this).prop('id')=='pubBtn0') {
-			$('#entityBtn').text('Advertisers');
+		$('#lines').prop('placeholder', $(this).children().first().next().text() + ' line items (comma separated)');
+		if ($(this).children().first().val()=='pub') {
+			$('#entityBtn').next().text('Advertisers');
 		}
 		else {
-			$('#entityBtn').text('Publishers');
+			$('#entityBtn').next().text('Publishers');
 		}
 		$('.entity_type.active').click();
 	})
 	$('.entity_type').click(function() {
-		$('#entity_ids').prop('placeholder', $(this).text() + ' (comma separated)');
-		$('#entity_type').val($(this).val());
-	})
-	$('#entityBtn, #advBtn0').click();
+		$('#entity_ids').prop('placeholder', $(this).children().first().next().text() + ' (comma separated)');
+	});
+	$('#entityBtn, #advBtn').click();
 	$('#excludePubForm').ajaxForm({
 		beforeSubmit: function(arr, $form, options) {
-			$(':submit').prop('disabled', true);
-			$('#response').removeClass('alert-success alert-error').addClass('alert').html('Loading...');
+			$('fieldset').prop('disabled', true);
+			$('#response').removeClass().addClass('alert alert-warning').html('Loading...');
 		},
 		success: function(responseText, statusText, xhr, $form) {
-			$(':submit').prop('disabled', false);
-			$('#response').addClass('alert-success').html(responseText);
+			$('fieldset').prop('disabled', false);
+			$('#response').removeClass().addClass('alert alert-success').html(responseText);
 		},
 		error: function() {
-			$(':submit').prop('disabled', false);
-			$('#response').addClass('alert-error').html('Error.');
+			$('fieldset').prop('disabled', false);
+			$('#response').removeClass().addClass('alert alert-danger').html('Error.');
 		}
 	});
 })
