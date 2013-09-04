@@ -90,6 +90,9 @@ if ($this->config->item('use_username', 'tank_auth')) {
     <div class="container">
 		<?php echo form_open($this->uri->uri_string(), array('class'=>'form-signin')); ?>
 		<h2 class="form-signin-heading">Password reset</h2>
+		<?php foreach($errors as $error): ?>
+		<p class="text-danger"><?=$error?></p>
+		<?php endforeach;?>
 		<input name="login" type="text" class="form-control" id="login" placeholder="User / email address" required autofocus />
 		<br />
         <button class="btn btn-lg btn-primary btn-block" type="submit" name="reset">Get new password</button>

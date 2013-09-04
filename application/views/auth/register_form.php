@@ -131,7 +131,10 @@ $captcha = array(
 <body>
     <div class="container">
 		<?php echo form_open($this->uri->uri_string(), array('class'=>'form-signin')); ?>
-		<h2 class="form-signin-heading">Please register</h2>
+			<h2 class="form-signin-heading">Please register</h2>
+			<?php foreach($errors as $error): ?>
+			<p class="text-danger"><?=$error?></p>
+			<?php endforeach;?>
 			<input type="text" class="form-control" name="username" value="" id="username" maxlength="20" placeholder="Username" required autofocus />
 
 			<input type="email" class="form-control" name="email" value="" id="email" maxlength="80" placeholder="Email" required />

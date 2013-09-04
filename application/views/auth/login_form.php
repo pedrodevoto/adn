@@ -108,15 +108,18 @@ $captcha = array(
     <div class="container">
 
 		<?php echo form_open($this->uri->uri_string(), array('class'=>'form-signin')); ?>
-        <h2 class="form-signin-heading">Please sign in</h2>
-		<input name="login" type="text" class="form-control" placeholder="User / email address" required autofocus />
-		<input name="password" type="password" class="form-control" placeholder="Password" required />
-        <label class="checkbox">
-          <input name="remember" type="checkbox" value="remember-me"> Remember me
-        </label>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-		<?php echo anchor('/auth/forgot_password/', 'Forgot password'); ?>
-		<?php if ($this->config->item('allow_registration', 'tank_auth')) echo ' | '.anchor('/auth/register/', 'Register'); ?>
+	        <h2 class="form-signin-heading">Please sign in</h2>
+			<?php foreach($errors as $error): ?>
+			<p class="text-danger"><?=$error?></p>
+			<?php endforeach;?>
+			<input name="login" type="text" class="form-control" placeholder="User / email address" required autofocus />
+			<input name="password" type="password" class="form-control" placeholder="Password" required />
+	        <label class="checkbox">
+	          <input name="remember" type="checkbox" value="remember-me"> Remember me
+	        </label>
+	        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+			<?php echo anchor('/auth/forgot_password/', 'Forgot password'); ?>
+			<?php if ($this->config->item('allow_registration', 'tank_auth')) echo ' | '.anchor('/auth/register/', 'Register'); ?>
 		<?php echo form_close(); ?>
 		
     </div> <!-- /container -->
