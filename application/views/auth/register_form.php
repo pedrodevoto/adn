@@ -69,35 +69,54 @@ $captcha = array(
 	body {
 	  padding-top: 40px;
 	  padding-bottom: 40px;
-	  background-color: #f5f5f5;
+	  background-color: #eee;
 	}
 
 	.form-signin {
-	  max-width: 300px;
-	  padding: 19px 29px 29px;
-	  margin: 0 auto 20px;
-	  background-color: #fff;
-	  border: 1px solid #e5e5e5;
-	  -webkit-border-radius: 5px;
-	     -moz-border-radius: 5px;
-	          border-radius: 5px;
-	  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-	     -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-	          box-shadow: 0 1px 2px rgba(0,0,0,.05);
+	  max-width: 330px;
+	  padding: 15px;
+	  margin: 0 auto;
 	}
 	.form-signin .form-signin-heading,
 	.form-signin .checkbox {
 	  margin-bottom: 10px;
 	}
-	.form-signin input[type="text"],
-	.form-signin input[type="email"],
-	.form-signin input[type="password"] {
+	.form-signin .checkbox {
+	  font-weight: normal;
+	}
+	.form-signin .form-control {
+	  position: relative;
 	  font-size: 16px;
 	  height: auto;
-	  margin-bottom: 15px;
-	  padding: 7px 9px;
+	  padding: 10px;
+	  -webkit-box-sizing: border-box;
+	     -moz-box-sizing: border-box;
+	          box-sizing: border-box;
+	}
+	.form-signin .form-control:focus {
+	  z-index: 2;
+	}
+	.form-signin #username {
+	  margin-bottom: -1px;
+	  border-bottom-left-radius: 0;
+	  border-bottom-right-radius: 0;
+	}
+	.form-signin #email,
+	.form-signin #password {
+  	  border-bottom-left-radius: 0;
+  	  border-bottom-right-radius: 0;
+	  border-top-left-radius: 0;
+	  border-top-right-radius: 0;
+	  margin-bottom: -1px;
+	}
+	
+	.form-signin #confirm_password {
+	  margin-bottom: 10px;
+	  border-top-left-radius: 0;
+	  border-top-right-radius: 0;
 	}
 	</style>
+
 	<script>
 	function checkPassword(input) {
 	    if ($(input).val() != $('#password').val()) {
@@ -110,54 +129,18 @@ $captcha = array(
 	</script>
 </head>
 <body>
-<?php echo form_open($this->uri->uri_string(), array('class'=>'form-signin')); ?>
-<h2 class="form-signin-heading">Please register</h2>
-	<?php if ($use_username) { ?>
-		<input type="text" name="username" value="" id="username" maxlength="20" size="30" placeholder="Username" required />
+    <div class="container">
+		<?php echo form_open($this->uri->uri_string(), array('class'=>'form-signin')); ?>
+		<h2 class="form-signin-heading">Please register</h2>
+			<input type="text" class="form-control" name="username" value="" id="username" maxlength="20" placeholder="Username" required autofocus />
+
+			<input type="email" class="form-control" name="email" value="" id="email" maxlength="80" placeholder="Email" required />
 	
-	<?php } ?>
-		<input type="email" name="email" value="" id="email" maxlength="80" size="30" placeholder="Email" required />
-		
-		<input type="password" name="password" value="" id="password" maxlength="20" size="30" placeholder="Password" required />
+			<input type="password" class="form-control" name="password" value="" id="password" maxlength="20" placeholder="Password" required />
 
-		<input type="password" name="confirm_password" value="" id="confirm_password" maxlength="20" size="30" placeholder="Confirm password" required oninput="checkPassword(this)" />		
-
-	<?php if ($captcha_registration) {
-		if ($use_recaptcha) { ?>
-	<tr>
-		<td colspan="2">
-			<div id="recaptcha_image"></div>
-		</td>
-		<td>
-			<a href="javascript:Recaptcha.reload()">Get another CAPTCHA</a>
-			<div class="recaptcha_only_if_image"><a href="javascript:Recaptcha.switch_type('audio')">Get an audio CAPTCHA</a></div>
-			<div class="recaptcha_only_if_audio"><a href="javascript:Recaptcha.switch_type('image')">Get an image CAPTCHA</a></div>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<div class="recaptcha_only_if_image">Enter the words above</div>
-			<div class="recaptcha_only_if_audio">Enter the numbers you hear</div>
-		</td>
-		<td><input type="text" id="recaptcha_response_field" name="recaptcha_response_field" /></td>
-		<td style="color: red;"><?php echo form_error('recaptcha_response_field'); ?></td>
-		<?php echo $recaptcha_html; ?>
-	</tr>
-	<?php } else { ?>
-	<tr>
-		<td colspan="3">
-			<p>Enter the code exactly as it appears:</p>
-			<?php echo $captcha_html; ?>
-		</td>
-	</tr>
-	<tr>
-		<td><?php echo form_label('Confirmation Code', $captcha['id']); ?></td>
-		<td><?php echo form_input($captcha); ?></td>
-		<td style="color: red;"><?php echo form_error($captcha['name']); ?></td>
-	</tr>
-	<?php }
-	} ?>
-	<button class="btn btn-large btn-primary" type="submit" name="register" value="Register">Register</button>
-<?php echo form_close(); ?>
+			<input type="password" class="form-control" name="confirm_password" value="" id="confirm_password" maxlength="20" placeholder="Confirm password" required oninput="checkPassword(this)" />		
+			
+			<button class="btn btn-lg btn-primary btn-block" type="submit" name="register" value="Register">Register</button>
+		<?php echo form_close(); ?>
 </body>
 </html>
