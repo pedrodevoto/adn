@@ -3,7 +3,7 @@
 
 class Rightmedia {
 	
-	const SOAP_BASE = 'https://api-test.yieldmanager.com/api-1.37/';
+	const SOAP_BASE = 'https://api.yieldmanager.com/api-1.37/';
 	const KEY = "22]o<2IL20IqoE9k:0T32ZXDcmHn]6";
 	
 	const PUB_TEST_ID = 711311;
