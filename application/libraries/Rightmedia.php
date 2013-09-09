@@ -481,7 +481,7 @@ class Rightmedia {
 		}
 	}
 
-	public function assign_manager($entity_type, $entity_ids, $contact)
+	public function assign_manager_trafficker($entity_type, $entity_ids, $contact, $trafficker)
 	{
 		try {
 			$method = $entity_type=='pub'?'getBySellers':'getByBuyers';
@@ -493,8 +493,16 @@ class Rightmedia {
 		}
 		foreach ($insertion_orders as $insertion_order) {
 			$prop = $entity_type=='pub'?'buyer_contact_id':'seller_contact_id';
-			if ($insertion_order->$prop != $contact) {
+			$change = FALSE;
+			if ($contact and $insertion_order->$prop != $contact) {
 				$insertion_order->$prop = $contact;
+				$change = TRUE;
+			}
+			if ($entity_type == "adv" and $trafficker and $trafficker != $insertion_order->buyer_trafficker_id) {
+				$insertion_order->buyer_trafficker_id = $trafficker;
+				$change = TRUE;
+			}
+			if ($change) {
 				try {
 					$this->io_client()->update($this->token, $insertion_order);
 				}

@@ -21,6 +21,11 @@
 				<?php foreach($contacts as $contact):?>
 					<option value="<?=$contact->id?>"><?=$contact->name?> (<?=$contact->id?>)</option>
 				<?php endforeach;?>
+				</select> 
+				<select title="Trafficker" id="trafficker" class="selectpicker" name="trafficker" required>
+				<?php foreach($contacts as $contact):?>
+					<option value="<?=$contact->id?>"><?=$contact->name?> (<?=$contact->id?>)</option>
+				<?php endforeach;?>
 				</select>
 			</div>
 			<button type="submit" class="btn btn-default">Assign</button>
@@ -33,7 +38,8 @@
 
 <script>
 $(document).ready(function() {
-	$('.selectpicker').selectpicker();
+	$('.selectpicker').selectpicker().selectpicker('val', []);
+	$('#trafficker').selectpicker('val', []);
 	$('.entity_type').click(function() {
 		$('#entity_ids').prop('placeholder', $(this).children().first().next().text() + ' (comma separated)');
 	})
