@@ -172,10 +172,19 @@ Class Ajax extends CI_Controller {
 	
 	public function copy_targeting()
 	{
+		$options = $this->input->post('copyall')?'copyall':array(
+			'techno'	=>	$this->input->post('techno'),
+			'geo'		=>	$this->input->post('geo'),
+			'freq'		=>	$this->input->post('freq'),
+			'urls'		=>	$this->input->post('urls'),
+			'channels'	=>	$this->input->post('channels'),
+			'publishers'=>	$this->input->post('publishers'),
+			'vurls'		=>	$this->input->post('vurls')
+		);
 		$from_line = $this->input->post('from_line');
 		$to_lines = $this->numbers_to_array($this->input->post('to_lines'), ',');
 		$this->load->library('rightmedia');
-		$this->rightmedia->copy_targeting($from_line, $to_lines);
+		$this->rightmedia->copy_targeting($from_line, $to_lines, $options);
 		echo implode('<br />', $this->rightmedia->errors);
 		echo "Done";
 	}

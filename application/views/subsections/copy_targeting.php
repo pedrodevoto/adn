@@ -14,7 +14,56 @@
 					</div>
 				</div>
 			</div>
-		
+			
+			<p>
+				<div class="checkbox">
+			    	<label>
+			    		<input type="checkbox" name="copyall" id="copyall"> Copy whole targeting
+					</label>
+				</div>
+			</p>
+			<div class="checkbox">
+			    <label>
+			    	<input type="checkbox" id="selectall"> Select all
+			    </label>
+			</div>
+			
+			<div class="checkbox">
+			    <label>
+			    	<input class="option" type="checkbox" name="techno"> Techno
+			    </label>
+			</div>
+			<div class="checkbox">
+			    <label>
+			    	<input class="option" type="checkbox" name="geo"> Geography
+			    </label>
+			</div>
+			<div class="checkbox">
+			    <label>
+			    	<input class="option" type="checkbox" name="freq"> Frequency
+			    </label>
+			</div>
+			<div class="checkbox">
+			    <label>
+			    	<input class="option" type="checkbox" name="urls"> URLs
+			    </label>
+			</div>
+			<div class="checkbox">
+			    <label>
+			    	<input class="option" type="checkbox" name="channels"> Channels
+			    </label>
+			</div>
+			<div class="checkbox">
+			    <label>
+			    	<input class="option" type="checkbox" name="publishers"> Publishers
+			    </label>
+			</div>
+			<div class="checkbox">
+			    <label>
+			    	<input class="option" type="checkbox" name="vurls"> Validated URLs
+			    </label>
+			</div>
+			
 			<input type="submit" class="btn btn-default" value="Copy Targeting">
 		    
 	    </fieldset>
@@ -25,8 +74,22 @@
 </div>
 <script>
 $(document).ready(function() {
+	$('#selectall').click(function() {
+		$('.option').prop('checked', $(this).prop('checked'));
+	})
+	$('#copyall').click(function() {
+		$('.option, #selectall').prop('disabled', $(this).prop('checked'));
+	})
 	$('#copyTargetingForm').ajaxForm({
 		beforeSubmit: function(arr, $form, options) {
+			var passed = false;
+			$('.option, #copyall').each(function(i,e) {
+				passed = $(e).prop('checked')?true:passed;
+			});
+			if (!passed) {
+				alert('You must select at least one option');
+				return false;
+			}
 			$('fieldset').prop('disabled', true);
 			$('#response').removeClass().addClass('alert alert-warning').html('Loading...');
 		},

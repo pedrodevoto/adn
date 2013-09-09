@@ -468,19 +468,134 @@ class Rightmedia {
 		}
 	}
 
-	public function copy_targeting($from_line, $to_lines)
+	public function copy_targeting($from_line, $to_lines, $options)
 	{
 		foreach ($to_lines as $to_line) {
-			try {
-				$this->target_profile_client()->copyTargetProfile($this->token, 'line_item', $from_line, $to_line);
+			if ($options == 'copyall') {
+				try {
+					$this->target_profile_client()->copyTargetProfile($this->token, 'line_item', $from_line, $to_line);
+				}
+				catch (Exception $e) {
+					$this->errors[] = $e->getMessage();
+					continue;
+				}
 			}
-			catch (Exception $e) {
-				$this->errors[] = $e->getMessage();
-				continue;
+			else {
+				foreach ($options as $name=>$flag) {
+					if ($flag) {
+						$this->{'copy_targeting_'.$name}($from_line, $to_line);
+					}
+				}
 			}
 		}
 	}
 
+	private function copy_targeting_techno($from_line, $to_line)
+	{
+		try {
+			$result = $this->target_profile_client()->getTargetTechno($this->token, 'line_item', $from_line);
+			$included_techno_ids = $result['included_techno_ids']; 
+			$excluded_techno_ids = $result['excluded_techno_ids'];
+			$this->target_profile_client()->setTargetTechno($this->token, 'line_item', $to_line, $included_techno_ids, $excluded_techno_ids);
+			return TRUE;
+		}
+		catch (Exception $e) {
+			$this->errors[] = $e->getMessage();
+			return FALSE;
+		}
+	}
+	
+	private function copy_targeting_geo($from_line, $to_line)
+	{
+		try {
+			$result = $this->target_profile_client()->getTargetGeographyV2($this->token, 'line_item', $from_line);
+			$woeids = $result['woeids']; 
+			$custom_geo_area_ids = $result['custom_geo_area_ids'];
+			$this->target_profile_client()->setTargetGeographyV2($this->token, 'line_item', $to_line, $woeids, $custom_geo_area_ids, FALSE);
+			return TRUE;
+		}
+		catch (Exception $e) {
+			$this->errors[] = $e->getMessage();
+			return FALSE;
+		}
+	}
+	
+	private function copy_targeting_freq($from_line, $to_line)
+	{
+		try {
+			$result = $this->target_profile_client()->getTargetFrequency($this->token, 'line_item', $from_line);
+			$frequency = $result['frequency']; 
+			$period = $result['period'];
+			$this->target_profile_client()->setTargetFrequency($this->token, 'line_item', $to_line, $frequency, $period);
+			return TRUE;
+		}
+		catch (Exception $e) {
+			$this->errors[] = $e->getMessage();
+			return FALSE;
+		}
+	}
+	
+	private function copy_targeting_urls($from_line, $to_line)
+	{
+		try {
+			$result = $this->target_profile_client()->getTargetUrls($this->token, 'line_item', $from_line);
+			$url_default = $result['url_default']; 
+			$urls = $result['urls'];
+			$this->target_profile_client()->setTargetUrls($this->token, 'line_item', $to_line, $url_default, $urls, FALSE);
+			return TRUE;
+		}
+		catch (Exception $e) {
+			$this->errors[] = $e->getMessage();
+			return FALSE;
+		}
+	}
+	
+	private function copy_targeting_channels($from_line, $to_line)
+	{
+		try {
+			$result = $this->target_profile_client()->getTargetChannels($this->token, 'line_item', $from_line);
+			$channel_default = $result['channel_default']; 
+			$include_channel_ids = $result['include_channel_ids'];
+			$exclude_channel_ids = $result['exclude_channel_ids'];
+			$this->target_profile_client()->setTargetChannels($this->token, 'line_item', $to_line, $channel_default, $include_channel_ids, $exclude_channel_ids, FALSE);
+			return TRUE;
+		}
+		catch (Exception $e) {
+			$this->errors[] = $e->getMessage();
+			return FALSE;
+		}
+	}
+	
+	private function copy_targeting_publishers($from_line, $to_line)
+	{
+		try {
+			$result = $this->target_profile_client()->getTargetPublishers($this->token, 'line_item', $from_line);
+			$publisher_default = $result['publisher_default']; 
+			$publisher_entity_ids = $result['publisher_entity_ids'];
+			$this->target_profile_client()->setTargetPublishers($this->token, 'line_item', $to_line, $publisher_default, $publisher_entity_ids, FALSE);
+			return TRUE;
+		}
+		catch (Exception $e) {
+			$this->errors[] = $e->getMessage();
+			return FALSE;
+		}
+	}
+	
+	private function copy_targeting_vurls($from_line, $to_line)
+	{
+		try {
+			$result = $this->target_profile_client()->getTargetValidatedUrls($this->token, 'line_item', $from_line);
+			$options = $result['options']; 
+			$vurl_ids = $result['vurl_ids'];
+			$this->target_profile_client()->setTargetValidatedUrls($this->token, 'line_item', $to_line, $options, $vurl_ids, FALSE);
+			return TRUE;
+		}
+		catch (Exception $e) {
+			$this->errors[] = $e->getMessage();
+			return FALSE;
+		}
+	}
+	
 	public function assign_manager_trafficker($entity_type, $entity_ids, $contact, $trafficker)
 	{
 		try {
