@@ -17,12 +17,12 @@
 				<textarea class="form-control" id="entity_ids" name="entity_ids" rows="15" required pattern="^\s*(\s*[0-9]+\s*,?)+\s*$" required ></textarea>
 			</div>
 			<div class="form-group">
-				<select title="Account Manager" id="contact" class="selectpicker" name="contact" required>
+				<select title="Account Manager" id="contact" class="selectpicker" name="contact">
 				<?php foreach($contacts as $contact):?>
 					<option value="<?=$contact->id?>"><?=$contact->name?> (<?=$contact->id?>)</option>
 				<?php endforeach;?>
 				</select> 
-				<select title="Trafficker" id="trafficker" class="selectpicker" name="trafficker" required>
+				<select title="Trafficker" id="trafficker" class="selectpicker" name="trafficker">
 				<?php foreach($contacts as $contact):?>
 					<option value="<?=$contact->id?>"><?=$contact->name?> (<?=$contact->id?>)</option>
 				<?php endforeach;?>
@@ -46,6 +46,10 @@ $(document).ready(function() {
 	$('#advBtn').click();
 	$('#assignManagerForm').ajaxForm({
 		beforeSubmit: function(arr, $form, options) {
+			if (!$('#contact').val() && !$('#trafficker').val()) {
+				alert('You must select either an account manager or a trafficker or both.');
+				return false;
+			}
 			$('fieldset').prop('disabled', true);
 			$('#response').removeClass().addClass('alert alert-warning').html('Loading...');
 		},

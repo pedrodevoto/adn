@@ -41,7 +41,7 @@
 	  <!-- Collect the nav links, forms, and other content for toggling -->
 	  <div class="collapse navbar-collapse navbar-ex1-collapse">
 	    <ul class="nav navbar-nav">
-            <li <?php if($section=='publishers'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/publishers')?>">Publishers</a></li>
+            <li <?php if($section=='publishers'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/publishers')?>">Contacts</a></li>
             <!--<li <?php if($section=='segments'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/segments')?>">Segments</a></li>
             <li <?php if($section=='duplicate_creatives'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/duplicate_creatives')?>">Duplicador</a></li>
             <li <?php if($section=='associate_creatives'){?>class="active"<?php }?>><a href="<?=site_url('dashboard/associate_creatives')?>">Creatives</a></li>

@@ -695,11 +695,28 @@ class Rightmedia {
 	public function update_line_items($line_items)
 	{
 		foreach ($line_items as $line_item) {
+			$line_updates = array();
+			
+			list($delivery_unit, $delivery_type) = explode('-', $line_item['delivery_units_type']);
+			$line_updates[($delivery_unit=='Imps'?'imp_':'').'delivery_type'] = $delivery_type;
+			
 			if ($line_item['url']) {
 				$this->update_line_item_url($line_item['id'], $line_item['url']);
 			}
 			if ($line_item['amount']) {
-				$this->update_line_item_amount($line_item['id'], $line_item['amount']);
+				$line_updates['amount'] = $line_item['amount'];
+			}
+			if ($line_item['desc']) {
+				$line_updates['desc'] = $line_item['desc'];
+			}
+			if ($line_item['budget']) {
+				$line_updates[($delivery_unit=='Imps'?'imp_':'').'budget'] = $line_item['budget'];
+			}
+			if ($line_item['cap'] and $delivery_type != 'ASAP' and $delivery_type != 'Even') {
+				$line_updates[($delivery_unit=='Imps'?'imp_':'').'delivery_cap'] = $line_item['cap'];
+			}
+			if (count($line_updates)) {
+				$this->update_line_item($line_item['id'], $line_updates);
 			}
 		}
 	}
@@ -718,12 +735,60 @@ class Rightmedia {
 		}
 	}
 
-	private function update_line_item_amount($line_item_id, $amount)
+	private function update_line_item($line_item_id, $data)
 	{
 		try {
 			$line_item = $this->lineitem_client()->get($this->token, $line_item_id);
-			$line_item->amount = floatval($amount);
-			$this->lineitem_client()->update($this->token, $line_item);
+			$changed = FALSE;
+			foreach($data as $key=>$val) {
+				switch ($key) {
+					case 'amount':
+						$changed = floatval($line_item->amount) != floatval($val)?TRUE:$changed;
+						$line_item->amount = floatval($val);
+						break;
+					case 'desc':
+						$changed = $line_item->description != $val?TRUE:$changed;
+						$line_item->description = $val;
+						break;
+					case 'budget':
+						$changed = $line_item->budget != $val?TRUE:$changed;
+						$line_item->budget = $val;
+						$line_item->imp_budget = NULL;
+						$line_item->delivery_clicks = NULL;
+						break;
+					case 'imp_budget':
+						$changed = $line_item->imp_budget != $val?TRUE:$changed;
+						$line_item->imp_budget = $val;
+						$line_item->budget = NULL;
+						$line_item->delivery_clicks = NULL;
+						break;
+					case 'delivery_type':
+						$changed = $line_item->delivery_type != $val?TRUE:$changed;
+						$line_item->delivery_type = $val;
+						$line_item->imp_delivery_type = NULL;
+						break;
+					case 'imp_delivery_type':
+						$changed = $line_item->imp_delivery_type != $val?TRUE:$changed;
+						$line_item->imp_delivery_type = $val;
+						$line_item->delivery_type = NULL;
+						break;
+					case 'delivery_cap':
+						$changed = $line_item->delivery_cap != $val?TRUE:$changed;
+						$line_item->delivery_cap = $val;
+						$line_item->imp_delivery_cap = NULL;
+						$line_item->delivery_clicks = NULL;
+						break;
+					case 'imp_delivery_cap':
+						$changed = $line_item->imp_delivery_cap != $val?TRUE:$changed;
+						$line_item->imp_delivery_cap = $val;
+						$line_item->delivery_cap = NULL;
+						$line_item->delivery_clicks = NULL;
+						break;
+				}
+			}
+			if ($changed) {
+				$this->lineitem_client()->update($this->token, $line_item);
+			}
 			return TRUE;
 		}
 		catch (Exception $e) {
