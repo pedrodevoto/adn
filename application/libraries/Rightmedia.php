@@ -11,6 +11,7 @@ class Rightmedia {
 	const PUB_TEST_SITE = 1633268;
 	const TEST_SECTION_CHANNEL = 15;
 	const ENTITY_ID = 117472;
+	const TEST_IMP_BUDGET = 100000;
 
 	// services
 	private $__contact_client = NULL;
@@ -300,6 +301,7 @@ class Rightmedia {
 				$line_item->pricing_type = 'CPA';
 				$line_item->amount = 0.01;
 				$line_item->conversion_id = $pixel;
+				$line_item->imp_budget = $this::TEST_IMP_BUDGET;
 				break;
 			case 'pub':
 				$line_item->pricing_type = 'Revenue Share';
