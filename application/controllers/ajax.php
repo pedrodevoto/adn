@@ -71,7 +71,7 @@ Class Ajax extends CI_Controller {
 		$filedata = $this->upload->data();
 		
 		if ($filedata['is_image'] or $filedata['file_type']=='application/x-shockwave-flash') {
-			return array($filedata['full_path']);
+			return array(array('server_path'=>$filedata['full_path'], 'size'=>$filedata['file_size'] * 1024));
 		}
 		$this->load->library('unzip');
 		$this->unzip->allow(array('jpg', 'jpeg', 'png', 'swf', 'gif'));
