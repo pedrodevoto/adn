@@ -269,7 +269,7 @@ class Rightmedia {
 	
 	public function create_test_tag(&$test_tag)
 	{
-		$timestamp = date('d/m/y');
+		$timestamp = date('d/m/y h:i:s');
 		$insertion_order = $this->get_io($test_tag->io);
 		$advertiser = $this->get_entity($insertion_order->buyer_entity_id);
 		$test_tag->adv_id = $advertiser->id;
